@@ -3,21 +3,6 @@ from transactions.transaction import Transaction
 
 import sqlite3
 
-# Enums for importing Checking and Savings account data
-ACCOUNT_NUMBER = 'Account Number'
-TRANSACTION_DESCRIPTION = 'Transaction Description'
-TRANSACTION_DATE = 'Transaction Date'
-TRANSACTION_TYPE = 'Transaction Type'
-TRANSACTION_AMOUNT = 'Transaction Amount'
-
-# Enums for importing Credit Card account data
-POSTED_DATE = 'Posted Date'
-CARD_NUMBER = 'Card No.'
-DESCRIPTION = 'Description'
-CATEGORY = 'Category'
-DEBIT = 'Debit'
-CREDIT = 'Credit' 
-
 def import_transactions(reader):
     with sqlite3.connect(Misc_enums.DATABASE.value) as connection:
         if 'Account Number' in reader.fieldnames:
@@ -28,33 +13,15 @@ def import_transactions(reader):
 
 def import_checking_saving_account(reader, connection):
     for row in reader:
-        transaction_type = row[TRANSACTION_TYPE]
-        
-        transaction = Transaction(
-            date = row[TRANSACTION_DATE],
-            account = row[ACCOUNT_NUMBER],
-            description = row[TRANSACTION_DESCRIPTION],
-            category = str(row[TRANSACTION_DESCRIPTION]).split()[0],
-            debit = float(row[TRANSACTION_AMOUNT] or 0) if transaction_type == DEBIT else 0,
-            credit = float(row[TRANSACTION_AMOUNT] or 0) if transaction_type == CREDIT else 0
-        )
-
-        execute_connection(connection, transaction)
+        transaction = Transaction.from_checking_and_saving_account_csv_row(row)
+        insert_transaction(connection, transaction)
 
 def import_credit_card_account(reader, connection):
     for row in reader:
-        transaction = Transaction(
-            date = row[POSTED_DATE],
-            account = row[CARD_NUMBER],
-            description = row[DESCRIPTION],
-            category = row[CATEGORY],
-            debit = row[DEBIT],
-            credit = row[CREDIT]
-        )
+        transaction = Transaction.from_checking_and_saving_account_csv_row(row)
+        insert_transaction(connection, transaction)
 
-        execute_connection(connection, transaction)
-
-def execute_connection(connection, transaction):
+def insert_transaction(connection, transaction):
     connection.execute(
         "INSERT INTO transactions (date, account, description, category, debit, credit) VALUES (?, ?, ?, ?, ?, ?)",
         (
@@ -66,3 +33,18 @@ def execute_connection(connection, transaction):
             transaction.credit
         )
     )
+
+def get_all_transactions() -> Transaction | None:
+    with sqlite3.connect(Misc_enums.DATABASE.value) as connection:
+        connection.row_factory = sqlite3.Row
+        rows = connection.execute(
+            "SELECT * FROM transactions"
+        ).fetchall()
+
+        transactions = []
+
+        for row in rows:
+            transaction = Transaction.from_sql_row(row)
+            transactions.append(transaction)
+
+        return transactions if len(transactions) > 0 else None
