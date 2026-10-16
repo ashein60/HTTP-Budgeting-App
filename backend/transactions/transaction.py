@@ -46,6 +46,7 @@ class Transaction:
         transaction_type = row[TRANSACTION_TYPE]
 
         return cls(
+            id = None,
             date = row[TRANSACTION_DATE],
             account = row[ACCOUNT_NUMBER],
             description = row[TRANSACTION_DESCRIPTION],
@@ -57,6 +58,7 @@ class Transaction:
     @classmethod
     def from_credit_card_csv_row(cls, row):
         return cls(
+            id = None,
             date = row[POSTED_DATE],
             account = row[CARD_NUMBER],
             description = row[DESCRIPTION],
