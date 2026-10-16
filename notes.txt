@@ -1,0 +1,3 @@
+Tests:
+- Files must be in the format test_foo.py
+- In the terminal, run python -m pytest
