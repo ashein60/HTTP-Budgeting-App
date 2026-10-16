@@ -2,6 +2,8 @@ from flask import request, jsonify
 from io import TextIOWrapper
 from metadata import flask_setup
 from transactions import transaction_service
+from dataclasses import asdict
+
 
 import csv
 
@@ -22,3 +24,12 @@ def import_transactions():
     transaction_service.import_transactions(reader)
 
     return jsonify({"success": "Transactions were imported successfully"}), 201
+
+@flask_setup.app.route('/get-all-transactions', methods=['GET'])
+def get_all_transactions():
+    transactions = transaction_service.get_all_transactions()
+
+    if transactions is None:
+        return jsonify(None)
+
+    return jsonify([asdict(t) for t in transactions])
