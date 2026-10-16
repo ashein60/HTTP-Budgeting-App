@@ -21,6 +21,7 @@ CREDIT = 'Credit'
 
 @dataclass
 class Transaction:
+    id: int
     date: datetime
     account: str
     description: str
@@ -31,6 +32,7 @@ class Transaction:
     @classmethod
     def from_sql_row(cls, row):
         return cls(
+            id = row[Transaction_Enums.ID.value],
             date =  row[Transaction_Enums.DATE.value],
             account = row[Transaction_Enums.ACCOUNT.value],
             description = row[Transaction_Enums.DESCRIPTION.value],

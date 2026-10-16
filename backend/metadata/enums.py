@@ -1,6 +1,7 @@
 from enum import Enum
 
 class Transaction_Enums(Enum):
+    ID = 'id'
     DATE = 'date'
     ACCOUNT = 'account'
     DESCRIPTION = 'description'
