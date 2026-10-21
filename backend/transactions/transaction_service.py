@@ -1,20 +1,18 @@
 from metadata.enums import Misc_enums
 from transactions.transaction import Transaction
-
-import transaction_service_impl
+from transactions import transaction_service_impl
 
 import sqlite3
 
+ACCOUNT_NUMBER = 'Account Number'
+
 def import_transactions(reader):
     with sqlite3.connect(Misc_enums.DATABASE.value) as connection:
-        if 'Account Number' in reader.fieldnames:
-            transaction_service_impl.import_checking_saving_account(reader, connection)
-        else:
-            transaction_service_impl.import_credit_card_account(reader, connection)
+        transaction_service_impl.import_account(reader, connection)
 
-def get_all_transactions() -> Transaction | None:
+def get_transactions() -> Transaction | None:
     with sqlite3.connect(Misc_enums.DATABASE.value) as connection:
-        connection.row_factory = sqlite3.Row
+        connection.row_factory = sqlite3.Row # Allows csv style row format
         rows = connection.execute(
             "SELECT * FROM transactions"
         ).fetchall()

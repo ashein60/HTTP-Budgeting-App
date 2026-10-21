@@ -51,8 +51,8 @@ class Transaction:
             account = row[ACCOUNT_NUMBER],
             description = row[TRANSACTION_DESCRIPTION],
             category = str(row[TRANSACTION_DESCRIPTION]).split()[0],
-            debit = float(row[TRANSACTION_AMOUNT] or 0) if transaction_type == DEBIT else 0,
-            credit = float(row[TRANSACTION_AMOUNT] or 0) if transaction_type == CREDIT else 0
+            debit = row[TRANSACTION_AMOUNT] if transaction_type == DEBIT else '',
+            credit = row[TRANSACTION_AMOUNT] if transaction_type == CREDIT else ''
         )
 
     @classmethod
@@ -65,4 +65,29 @@ class Transaction:
             category = row[CATEGORY],
             debit = row[DEBIT],
             credit = row[CREDIT]
+        )
+
+    @property
+    def params(self):
+        """Does not include id"""
+        return (
+            self.date,
+            self.account,
+            self.description,
+            self.category,
+            self.debit,
+            self.credit
+        )
+
+    def __eq__(self, other):
+        """Does not include id or category"""
+        if not isinstance(other, Transaction):
+            return NotImplemented
+
+        return (
+            self.date == other.date
+            and self.account == other.account
+            and self.description == other.description
+            and self.debit == other.debit
+            and self.credit == other.credit
         )
