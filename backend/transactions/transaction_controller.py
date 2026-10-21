@@ -27,7 +27,7 @@ def import_transactions():
 
 @flask_setup.app.route('/transactions/', methods=['GET'])
 def get_all_transactions():
-    transactions = transaction_service.get_all_transactions()
+    transactions = transaction_service.get_transactions()
 
     if transactions is None:
         return jsonify(None)

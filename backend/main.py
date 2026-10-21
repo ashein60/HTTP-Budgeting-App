@@ -7,18 +7,20 @@ import sqlite3
 from transactions import transaction_controller
 
 def init_database():
-        with sqlite3.connect(Misc_enums.DATABASE.value) as connection:
-            connection.execute("""
-                CREATE TABLE IF NOT EXISTS transactions (
-                    id INTEGER PRIMARY KEY,
-                    date TEXT NOT NULL,
-                    account TEXT NOT NULL,
-                    description TEXT NOT NULL,
-                    category TEXT NOT NULL,
-                    debit TEXT NOT NULL,
-                    credit TEXT NOT NULL
-                )
-        """)
+    with sqlite3.connect(Misc_enums.DATABASE.value) as connection:
+        query = """
+                    CREATE TABLE IF NOT EXISTS transactions (
+                        id INTEGER PRIMARY KEY,
+                        date TEXT NOT NULL,
+                        account TEXT NOT NULL,
+                        description TEXT NOT NULL,
+                        category TEXT NOT NULL,
+                        debit TEXT NOT NULL,
+                        credit TEXT NOT NULL
+                    )
+                """
+        
+        connection.execute(query)
 
 if __name__ == "__main__":
     init_database()
