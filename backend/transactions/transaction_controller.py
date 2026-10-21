@@ -7,7 +7,7 @@ from dataclasses import asdict
 
 import csv
 
-@flask_setup.app.route('/import-transactions', methods=['POST'])
+@flask_setup.app.route('/transactions/import', methods=['POST'])
 def import_transactions():
     if 'file' not in request.files:
         return jsonify({"error": "No file provided"}), 400
@@ -25,7 +25,7 @@ def import_transactions():
 
     return jsonify({"success": "Transactions were imported successfully"}), 201
 
-@flask_setup.app.route('/get-all-transactions', methods=['GET'])
+@flask_setup.app.route('/transactions/', methods=['GET'])
 def get_all_transactions():
     transactions = transaction_service.get_all_transactions()
 
