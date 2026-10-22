@@ -1,0 +1,20 @@
+[
+    {
+        "account": "2815",
+        "category": "Merchandise",
+        "credit": "",
+        "date": "2026-10-12",
+        "debit": "37.44",
+        "description": "CANTON TOBACCO AND VAP",
+        "id": 1
+    },
+    {
+        "account": "2815",
+        "category": "Gas/Automotive",
+        "credit": "",
+        "date": "2026-10-12",
+        "debit": "44.31",
+        "description": "KROGER FUEL CTR #1680",
+        "id": 2
+    }
+]
