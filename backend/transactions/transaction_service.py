@@ -4,8 +4,6 @@ from transactions import transaction_service_impl
 
 import sqlite3
 
-ACCOUNT_NUMBER = 'Account Number'
-
 def import_transactions(reader):
     with sqlite3.connect(Misc_enums.DATABASE.value) as connection:
         transaction_service_impl.import_account(reader, connection)

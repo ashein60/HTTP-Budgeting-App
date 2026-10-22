@@ -1,12 +1,11 @@
 from transactions.transaction import Transaction
 from transactions import transaction_service
-
-ACCOUNT_NUMBER = 'Account Number'
+from metadata.enums import Cap_One_Checking_Enums
 
 def import_account(reader, connection):
     transactions = transaction_service.get_transactions() or []
 
-    if ACCOUNT_NUMBER in reader.fieldnames:
+    if Cap_One_Checking_Enums.ACCOUNT_NUMBER in reader.fieldnames:
         transaction_factory = Transaction.from_checking_and_saving_account_csv_row
     else:
          transaction_factory = Transaction.from_credit_card_csv_row
