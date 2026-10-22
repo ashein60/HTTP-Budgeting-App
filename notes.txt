@@ -1,3 +1,4 @@
 Tests:
 - Files must be in the format test_foo.py
-- In the terminal, run python -m pytest
+- Run all tests from the terminal: python -m pytest
+- Run a specific test from the terminal: python -m pytest backend\tests_component\transactions\test_transaction_controller.py -v -s
