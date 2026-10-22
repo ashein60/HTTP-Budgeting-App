@@ -1,23 +1,9 @@
 from metadata.enums import Transaction_Enums
+from metadata.enums import Cap_One_Checking_Enums
+from metadata.enums import Cap_One_CC_Enums
+
 from dataclasses import dataclass
 from datetime import date as datetime
-
-import sqlite3
-
-# Enums for importing Checking and Savings account data
-ACCOUNT_NUMBER = 'Account Number'
-TRANSACTION_DESCRIPTION = 'Transaction Description'
-TRANSACTION_DATE = 'Transaction Date'
-TRANSACTION_TYPE = 'Transaction Type'
-TRANSACTION_AMOUNT = 'Transaction Amount'
-
-# Enums for importing Credit Card account data
-POSTED_DATE = 'Posted Date'
-CARD_NUMBER = 'Card No.'
-DESCRIPTION = 'Description'
-CATEGORY = 'Category'
-DEBIT = 'Debit'
-CREDIT = 'Credit' 
 
 @dataclass
 class Transaction:
@@ -43,28 +29,28 @@ class Transaction:
 
     @classmethod
     def from_checking_and_saving_account_csv_row(cls, row):
-        transaction_type = row[TRANSACTION_TYPE]
+        transaction_type = row[Cap_One_Checking_Enums.TRANSACTION_TYPE]
 
         return cls(
             id = None,
-            date = row[TRANSACTION_DATE],
-            account = row[ACCOUNT_NUMBER],
-            description = row[TRANSACTION_DESCRIPTION],
-            category = str(row[TRANSACTION_DESCRIPTION]).split()[0],
-            debit = row[TRANSACTION_AMOUNT] if transaction_type == DEBIT else '',
-            credit = row[TRANSACTION_AMOUNT] if transaction_type == CREDIT else ''
+            date = row[Cap_One_Checking_Enums.TRANSACTION_DATE],
+            account = row[Cap_One_Checking_Enums.ACCOUNT_NUMBER],
+            description = row[Cap_One_Checking_Enums.TRANSACTION_DESCRIPTION],
+            category = str(row[Cap_One_Checking_Enums.TRANSACTION_DESCRIPTION]).split()[0],
+            debit = row[Cap_One_Checking_Enums.TRANSACTION_AMOUNT] if transaction_type == Cap_One_CC_Enums.DEBIT else '',
+            credit = row[Cap_One_Checking_Enums.TRANSACTION_AMOUNT] if transaction_type == Cap_One_CC_Enums.CREDIT else ''
         )
 
     @classmethod
     def from_credit_card_csv_row(cls, row):
         return cls(
             id = None,
-            date = row[POSTED_DATE],
-            account = row[CARD_NUMBER],
-            description = row[DESCRIPTION],
-            category = row[CATEGORY],
-            debit = row[DEBIT],
-            credit = row[CREDIT]
+            date = row[Cap_One_CC_Enums.POSTED_DATE],
+            account = row[Cap_One_CC_Enums.CARD_NUMBER],
+            description = row[Cap_One_CC_Enums.DESCRIPTION],
+            category = row[Cap_One_CC_Enums.CATEGORY],
+            debit = row[Cap_One_CC_Enums.DEBIT],
+            credit = row[Cap_One_CC_Enums.CREDIT]
         )
 
     @property
