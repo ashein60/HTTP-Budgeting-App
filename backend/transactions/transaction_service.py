@@ -1,21 +1,20 @@
-from backend.transactions.transaction import Transaction
-from backend.transactions import transaction_service_impl
-from backend.metadata.enums import Misc_enums
+import sqlite3
 from csv import DictReader
 
+from backend.metadata.enums import Misc_enums
+from backend.transactions import transaction_service_impl
+from backend.transactions.transaction import Transaction
 
-import sqlite3
 
 def import_transactions(reader: DictReader[str]):
     with sqlite3.connect(Misc_enums.DATABASE.value) as connection:
         transaction_service_impl.import_account(reader, connection)
 
+
 def get_transactions() -> Transaction | None:
     with sqlite3.connect(Misc_enums.DATABASE.value) as connection:
-        connection.row_factory = sqlite3.Row # Allows csv style row format
-        rows = connection.execute(
-            "SELECT * FROM transactions"
-        ).fetchall()
+        connection.row_factory = sqlite3.Row  # Allows csv style row format
+        rows = connection.execute("SELECT * FROM transactions").fetchall()
 
         transactions = []
 

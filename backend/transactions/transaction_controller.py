@@ -1,30 +1,31 @@
-from backend.transactions import transaction_service
-from backend.metadata import flask_setup
-from flask import request, jsonify
-from io import TextIOWrapper
-from dataclasses import asdict
-
 import csv
+from dataclasses import asdict
+from io import TextIOWrapper
 
-@flask_setup.app.route('/transactions/import', methods=['POST'])
+from flask import jsonify, request
+
+from backend.flask_setup import app
+from backend.transactions import transaction_service
+
+
+@app.route("/transactions/import", methods=["POST"])
 def import_transactions():
-    if 'file' not in request.files:
+    if "file" not in request.files:
         return jsonify({"error": "No file provided"}), 400
 
-    file = request.files['file']
+    file = request.files["file"]
 
-    if file.filename == '':
+    if file.filename == "":
         return jsonify({"error": "No file selected"}), 400
 
-    reader = csv.DictReader(
-        TextIOWrapper(file.stream, encoding='utf-8-sig')
-    )   
+    reader = csv.DictReader(TextIOWrapper(file.stream, encoding="utf-8-sig"))
 
     transaction_service.import_transactions(reader)
 
     return jsonify({"success": "Transactions were imported successfully"}), 201
 
-@flask_setup.app.route('/transactions', methods=['GET'])
+
+@app.route("/transactions", methods=["GET"])
 def get_transactions():
     transactions = transaction_service.get_transactions()
 
