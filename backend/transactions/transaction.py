@@ -34,9 +34,15 @@ class Transaction:
     def from_checking_and_saving_account_csv_row(cls, row):
         transaction_type = row[Cap_One_Checking_Enums.TRANSACTION_TYPE.value]
 
+        # Capital One Checking/Savings accounts format date like 10/12/26 and need to be 2026-10-12
+        date_unformatted = row[Cap_One_Checking_Enums.TRANSACTION_DATE.value]
+        date_formated = datetime.strptime(date_unformatted, "%m/%d/%y").strftime(
+            "%Y-%m-%d"
+        )
+
         return cls(
             id=None,
-            date=row[Cap_One_Checking_Enums.TRANSACTION_DATE.value],
+            date=date_formated,
             account=row[Cap_One_Checking_Enums.ACCOUNT_NUMBER.value],
             description=row[Cap_One_Checking_Enums.TRANSACTION_DESCRIPTION.value],
             category=str(
