@@ -1,5 +1,6 @@
 import csv
 from dataclasses import asdict
+from datetime import datetime
 from io import TextIOWrapper
 
 from flask import jsonify, request
@@ -10,6 +11,7 @@ from backend.transactions import transaction_service
 
 @app.route("/transactions/import", methods=["POST"])
 def import_transactions():
+    """Import CSVs from Capital One Checking and Savings Accounts and Credit Cards"""
     if "file" not in request.files:
         return jsonify({"error": "No file provided"}), 400
 
@@ -29,7 +31,17 @@ def import_transactions():
 def get_transactions():
     transactions = transaction_service.get_transactions()
 
-    if transactions is None:
-        transactions = []
+    return jsonify([asdict(t) for t in transactions]), 200
+
+
+@app.route("/transactions/<string:period_str>", methods=["GET"])
+def get_transactions_by_period(period_str):
+    """Period format should be YYYY-MM"""
+    try:
+        period_datetime = datetime.strptime(period_str, "%Y-%m")
+    except ValueError:
+        return jsonify({"error": "Invalid period. Use YYYY-MM format"}), 400
+
+    transactions = transaction_service.get_transactions_by_period(period_datetime)
 
     return jsonify([asdict(t) for t in transactions]), 200
