@@ -5,6 +5,8 @@ from backend.metadata.enums import Misc_enums
 
 def init_all_dbs():
     init_transactions_db()
+    init_category_group_db()
+    init_summary_db()
 
 
 def init_transactions_db():
@@ -18,6 +20,33 @@ def init_transactions_db():
                         category TEXT NOT NULL,
                         debit TEXT NOT NULL,
                         credit TEXT NOT NULL
+                    )
+                """
+
+        connection.execute(query)
+
+
+def init_category_group_db():
+    with sqlite3.connect(Misc_enums.DATABASE.value) as connection:
+        query = """
+                    CREATE TABLE IF NOT EXISTS category_group (
+                        name TEXT PRIMARY KEY
+                    )
+                """
+
+        connection.execute(query)
+
+
+def init_summary_db():
+    with sqlite3.connect(Misc_enums.DATABASE.value) as connection:
+        query = """
+                    CREATE TABLE IF NOT EXISTS summary (
+                        category TEXT PRIMARY KEY,
+                        category_group TEXT NOT NULL,
+                        expected TEXT NOT NULL,
+                        actual TEXT NOT NULL,
+                        FOREIGN KEY (category_group)
+                            REFERENCES category_group(name)
                     )
                 """
 
