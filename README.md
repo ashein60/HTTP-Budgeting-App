@@ -4,6 +4,7 @@ A personal budgeting app designed to track monthly transactions and provide a fi
 ## Current Features
 - **/Transactions/import:** Import from Capital One checking and savings accounts and credit cards. Duplicates are allowed within an import file, but transactions already in the database are not imported again.
 - **/Transactions:** Retrieve all transactions
+- **/transactions/period:** Retrieve transactions that are within the year and month provided (YYYY-MM)
 
 ## Tech Stack
 - Python

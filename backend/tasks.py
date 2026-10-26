@@ -11,22 +11,22 @@ def init_tasks():
         TASKS[task]()
 
 
-def build():
+def _build():
     subprocess.run([sys.executable, "-m", "compileall", "."], check=True)
 
 
-def spotless_apply():
+def _spotless_apply():
     """Add a noqa comment to ignore"""
     subprocess.run([sys.executable, "-m", "ruff", "format", "."], check=True)
     subprocess.run([sys.executable, "-m", "ruff", "check", "--fix", "."], check=True)
 
 
-def run_server():
+def _run_server():
     app.run(host="127.0.0.1", port=5000, debug=True)
 
 
 TASKS = {
-    "build": build,
-    "spotlessApply": spotless_apply,
-    "runServer": run_server,
+    "build": _build,
+    "spotlessApply": _spotless_apply,
+    "runServer": _run_server,
 }
