@@ -2,9 +2,10 @@
 A personal budgeting app designed to track monthly transactions and provide a financial summary.
 
 ## Current Features
-- **/Transactions/import:** Import from Capital One checking and savings accounts and credit cards. Duplicates are allowed within an import file, but transactions already in the database are not imported again.
-- **/Transactions:** Retrieve all transactions
-- **/transactions/period:** Retrieve transactions that are within the year and month provided (YYYY-MM)
+- **/transactions/import:** Import from Capital One checking and savings accounts and credit cards. Duplicates are allowed within an import file, but transactions already in the database are not imported again.
+- **/transactions:** Retrieve all transactions.
+- **/transactions/period/<string:period_str>:** Retrieve transactions that are within the year and month provided (YYYY-MM).
+- **/category_group:** Add a unique Category Group for the Summary table such as Income or Savings.
 
 ## Tech Stack
 - Python
