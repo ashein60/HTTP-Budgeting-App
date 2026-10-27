@@ -1,0 +1,12 @@
+from dataclasses import dataclass
+
+from backend.metadata.enums import CategoryGroupFields
+
+
+@dataclass
+class CategoryGroup:
+    name: str
+
+    @classmethod
+    def from_sql_row(cls, row):
+        return cls(name=row[CategoryGroupFields.NAME.value])

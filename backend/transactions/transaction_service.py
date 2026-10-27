@@ -24,7 +24,7 @@ def import_transactions(reader: DictReader[str]):
                 _insert_transaction(connection, transaction)
 
 
-def get_transactions() -> Transaction:
+def get_transactions() -> list[Transaction]:
     with sqlite3.connect(MiscEnums.DATABASE.value) as connection:
         connection.row_factory = sqlite3.Row  # Allows csv style row format
         rows = connection.execute("SELECT * FROM transactions").fetchall()
@@ -32,7 +32,7 @@ def get_transactions() -> Transaction:
         return _convert_rows_to_transactions(rows)
 
 
-def get_transactions_by_period(period: datetime) -> Transaction:
+def get_transactions_by_period(period: datetime) -> list[Transaction]:
     start_date, end_date = _convert_to_month_range(period)
 
     with sqlite3.connect(MiscEnums.DATABASE.value) as connection:

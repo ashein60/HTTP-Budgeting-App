@@ -9,6 +9,7 @@ from backend.flask_setup import app
 # Required to access POST and GET requests
 from backend.transactions import transaction_controller  # noqa # isort: skip
 
+# Files & Paths
 DATA_PATH = "backend/tests_component/transactions/data/"
 CHECKING_TRANSACTIONS = "checking_transactions.csv"
 CREDIT_CARD_TRANSACTIONS = "credit_card_transactions.csv"
@@ -67,12 +68,12 @@ def test_import_duplicates(tmp_path):
 
     _import_transactions(CREDIT_CARD_TRANSACTIONS)
 
-    response1 = app.test_client().get(TRANSACTIONS_API, data={})
+    response1 = app.test_client().get(TRANSACTIONS_API)
     count1 = len(response1.get_json())
 
     _import_transactions(CREDIT_CARD_TRANSACTIONS)
 
-    response2 = app.test_client().get(TRANSACTIONS_API, data={})
+    response2 = app.test_client().get(TRANSACTIONS_API)
     count2 = len(response2.get_json())
 
     assert count1 == count2
@@ -81,33 +82,33 @@ def test_import_duplicates(tmp_path):
 # ==================== /transaction ====================
 
 
-def test_transactions_empty(tmp_path):
+def test_get_transactions_empty(tmp_path):
     _init_db(tmp_path)
 
-    response = app.test_client().get(TRANSACTIONS_API, data={})
+    response = app.test_client().get(TRANSACTIONS_API)
 
     assert response.get_json() == []
     assert response.status_code == 200
 
 
-def test_checking_transactions_with_data(tmp_path):
+def test_get_checking_transactions_with_data(tmp_path):
     _init_db(tmp_path)
 
     _import_transactions(CHECKING_TRANSACTIONS)
 
-    response = app.test_client().get(TRANSACTIONS_API, data={})
+    response = app.test_client().get(TRANSACTIONS_API)
     count = len(response.get_json())
 
     assert count > 0
     assert response.status_code == 200
 
 
-def test_credit_card_transactions_with_data(tmp_path):
+def test_get_credit_card_transactions_with_data(tmp_path):
     _init_db(tmp_path)
 
     _import_transactions(CREDIT_CARD_TRANSACTIONS)
 
-    response = app.test_client().get(TRANSACTIONS_API, data={})
+    response = app.test_client().get(TRANSACTIONS_API)
     count = len(response.get_json())
 
     assert count > 0
@@ -120,7 +121,7 @@ def test_credit_card_transactions_with_data(tmp_path):
 def test_transactions_by_period_invalid(tmp_path):
     _init_db(tmp_path)
 
-    response = app.test_client().get(f"{TRANSACTIONS_PERIOD_API}/20166-10", data={})
+    response = app.test_client().get(f"{TRANSACTIONS_PERIOD_API}/20166-10")
 
     assert response.get_json() == {"error": "Invalid period. Use YYYY-MM format"}
     assert response.status_code == 400
@@ -131,7 +132,7 @@ def test_transactions_by_period_out_of_range(tmp_path):
 
     _import_transactions(CHECKING_TRANSACTIONS)
 
-    response = app.test_client().get(f"{TRANSACTIONS_PERIOD_API}/2001-10", data={})
+    response = app.test_client().get(f"{TRANSACTIONS_PERIOD_API}/2001-10")
     count = len(response.get_json())
 
     assert count == 0
@@ -143,7 +144,7 @@ def test_checking_transactions_by_period_in_range(tmp_path):
 
     _import_transactions(CHECKING_TRANSACTIONS).get_json()
 
-    response = app.test_client().get(f"{TRANSACTIONS_PERIOD_API}/2026-10", data={})
+    response = app.test_client().get(f"{TRANSACTIONS_PERIOD_API}/2026-10")
     count = len(response.get_json())
 
     assert count >= 2
@@ -155,7 +156,7 @@ def test_credit_card_transactions_by_period_in_range(tmp_path):
 
     _import_transactions(CREDIT_CARD_TRANSACTIONS)
 
-    response = app.test_client().get(f"{TRANSACTIONS_PERIOD_API}/2026-10", data={})
+    response = app.test_client().get(f"{TRANSACTIONS_PERIOD_API}/2026-10")
     count = len(response.get_json())
 
     assert count >= 2
