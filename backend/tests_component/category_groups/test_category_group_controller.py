@@ -11,6 +11,7 @@ DATABASE = "database.db"
 
 # APIs
 CATEGORY_GROUP_API = "/category_group"
+CATEGORY_GROUP_DELETE_API = "/category_group/delete"
 
 # ==================== POST /category_group ====================
 
@@ -24,7 +25,7 @@ def test_add_category_group_empty_data(tmp_path):
     assert response.status_code == 400
 
 
-def test_add_category_group_missing_name_key(tmp_path):
+def test_add_category_group_invalid_name_key(tmp_path):
     _init_db(tmp_path)
 
     response = app.test_client().post(CATEGORY_GROUP_API, json={"FooKey": "FooValue"})
@@ -48,7 +49,7 @@ def test_add_category_group_already_exists(tmp_path):
     app.test_client().post(CATEGORY_GROUP_API, json={"name": "Income"})
     response = app.test_client().post(CATEGORY_GROUP_API, json={"name": "Income"})
 
-    assert response.get_json() == {"error": "Category group already exists"}
+    assert response.get_json() == {"error": "Category Group already exists"}
     assert response.status_code == 409
 
 
@@ -57,7 +58,9 @@ def test_add_category_group_random_caps(tmp_path):
 
     response = app.test_client().post(CATEGORY_GROUP_API, json={"name": "inCOmE"})
 
-    assert response.get_json() == {"name": "Income"}
+    assert response.get_json() == {
+        "success": "The Category Group Income has been successfully added"
+    }
     assert response.status_code == 201
 
 
@@ -66,7 +69,9 @@ def test_add_category_group_multiple_words(tmp_path):
 
     response = app.test_client().post(CATEGORY_GROUP_API, json={"name": "Income Ratio"})
 
-    assert response.get_json() == {"name": "Income Ratio"}
+    assert response.get_json() == {
+        "success": "The Category Group Income Ratio has been successfully added"
+    }
     assert response.status_code == 201
 
 
@@ -90,6 +95,64 @@ def test_get_category_group_with_data(tmp_path):
     response = app.test_client().get(CATEGORY_GROUP_API)
 
     assert response.get_json() == [{"name": "Income"}]
+    assert response.status_code == 200
+
+
+# ==================== POST /category_group/delete ====================
+
+
+def test_delete_category_group_by_name_empty_data(tmp_path):
+    _init_db(tmp_path)
+
+    response = app.test_client().post(CATEGORY_GROUP_DELETE_API, json={})
+
+    assert response.get_json() == {"error": "A non-empty string 'name' is required"}
+    assert response.status_code == 400
+
+
+def test_delete_category_group_by_name_invalid_name_key(tmp_path):
+    _init_db(tmp_path)
+
+    response = app.test_client().post(
+        CATEGORY_GROUP_DELETE_API, json={"namedd": "Income"}
+    )
+
+    assert response.get_json() == {"error": "A non-empty string 'name' is required"}
+    assert response.status_code == 400
+
+
+def test_delete_category_group_by_name_empty_name_value(tmp_path):
+    _init_db(tmp_path)
+
+    response = app.test_client().post(CATEGORY_GROUP_DELETE_API, json={"name": "  "})
+
+    assert response.get_json() == {"error": "A non-empty string 'name' is required"}
+    assert response.status_code == 400
+
+
+def test_delete_category_group_by_name_not_found(tmp_path):
+    _init_db(tmp_path)
+
+    response = app.test_client().post(
+        CATEGORY_GROUP_DELETE_API, json={"name": "Income"}
+    )
+
+    assert response.get_json() == {"error": "The Category Group Income was not found"}
+    assert response.status_code == 404
+
+
+def test_delete_category_group_by_name_success(tmp_path):
+    _init_db(tmp_path)
+
+    app.test_client().post(CATEGORY_GROUP_API, json={"name": "incOme"})
+
+    response = app.test_client().post(
+        CATEGORY_GROUP_DELETE_API, json={"name": "IncoMe"}
+    )
+
+    assert response.get_json() == {
+        "success": "The Category Group Income has been successfully deleted"
+    }
     assert response.status_code == 200
 
 
