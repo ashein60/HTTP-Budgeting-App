@@ -1,7 +1,7 @@
 from enum import Enum
 
 
-class Transaction_Enums(Enum):
+class TransactionFields(Enum):
     ID = "id"
     DATE = "date"
     ACCOUNT = "account"
@@ -11,7 +11,7 @@ class Transaction_Enums(Enum):
     CREDIT = "credit"
 
 
-class Cap_One_Checking_Enums(Enum):
+class CapOneCheckingAndSavingsFields(Enum):
     """CSV Table Headers from Capital One for Checking and Savings Accounts"""
 
     ACCOUNT_NUMBER = "Account Number"
@@ -21,7 +21,7 @@ class Cap_One_Checking_Enums(Enum):
     TRANSACTION_AMOUNT = "Transaction Amount"
 
 
-class Cap_One_CC_Enums(Enum):
+class CapOneCreditCardFields(Enum):
     """CSV Table Headers from Capital One for the Credit Card"""
 
     POSTED_DATE = "Posted Date"
@@ -32,5 +32,9 @@ class Cap_One_CC_Enums(Enum):
     CREDIT = "Credit"
 
 
-class Misc_enums(Enum):
+class CategoryGroupFields(Enum):
+    NAME = "name"
+
+
+class MiscEnums(Enum):
     DATABASE = "database.db"

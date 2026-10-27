@@ -3,17 +3,17 @@ from csv import DictReader
 from datetime import datetime
 from sqlite3 import Connection
 
-from backend.metadata.enums import Cap_One_Checking_Enums, Misc_enums
+from backend.metadata.enums import CapOneCheckingAndSavingsFields, MiscEnums
 from backend.transactions.transaction import Transaction
 
 # ==================== Public Methods ====================
 
 
 def import_transactions(reader: DictReader[str]):
-    with sqlite3.connect(Misc_enums.DATABASE.value) as connection:
+    with sqlite3.connect(MiscEnums.DATABASE.value) as connection:
         transactions = get_transactions()
 
-        if Cap_One_Checking_Enums.ACCOUNT_NUMBER.value in reader.fieldnames:
+        if CapOneCheckingAndSavingsFields.ACCOUNT_NUMBER.value in reader.fieldnames:
             transaction_factory = Transaction.from_checking_and_saving_account_csv_row
         else:
             transaction_factory = Transaction.from_credit_card_csv_row
@@ -25,7 +25,7 @@ def import_transactions(reader: DictReader[str]):
 
 
 def get_transactions() -> Transaction:
-    with sqlite3.connect(Misc_enums.DATABASE.value) as connection:
+    with sqlite3.connect(MiscEnums.DATABASE.value) as connection:
         connection.row_factory = sqlite3.Row  # Allows csv style row format
         rows = connection.execute("SELECT * FROM transactions").fetchall()
 
@@ -35,7 +35,7 @@ def get_transactions() -> Transaction:
 def get_transactions_by_period(period: datetime) -> Transaction:
     start_date, end_date = _convert_to_month_range(period)
 
-    with sqlite3.connect(Misc_enums.DATABASE.value) as connection:
+    with sqlite3.connect(MiscEnums.DATABASE.value) as connection:
         connection.row_factory = sqlite3.Row  # Allows csv style row format
 
         query = """
