@@ -34,7 +34,7 @@ def get_transactions():
     return jsonify([asdict(t) for t in transactions]), 200
 
 
-@app.route("/transactions/<string:period_str>", methods=["GET"])
+@app.route("/transactions/period/<string:period_str>", methods=["GET"])
 def get_transactions_by_period(period_str):
     """Period format should be YYYY-MM"""
     try:

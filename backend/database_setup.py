@@ -1,6 +1,6 @@
 import sqlite3
 
-from backend.metadata.enums import Misc_enums
+from backend.metadata.enums import MiscEnums
 
 
 def init_all_dbs():
@@ -10,7 +10,7 @@ def init_all_dbs():
 
 
 def init_transactions_db():
-    with sqlite3.connect(Misc_enums.DATABASE.value) as connection:
+    with sqlite3.connect(MiscEnums.DATABASE.value) as connection:
         query = """
                     CREATE TABLE IF NOT EXISTS transactions (
                         id INTEGER PRIMARY KEY,
@@ -27,7 +27,7 @@ def init_transactions_db():
 
 
 def init_category_group_db():
-    with sqlite3.connect(Misc_enums.DATABASE.value) as connection:
+    with sqlite3.connect(MiscEnums.DATABASE.value) as connection:
         query = """
                     CREATE TABLE IF NOT EXISTS category_group (
                         name TEXT PRIMARY KEY
@@ -38,7 +38,7 @@ def init_category_group_db():
 
 
 def init_summary_db():
-    with sqlite3.connect(Misc_enums.DATABASE.value) as connection:
+    with sqlite3.connect(MiscEnums.DATABASE.value) as connection:
         query = """
                     CREATE TABLE IF NOT EXISTS summary (
                         category TEXT PRIMARY KEY,

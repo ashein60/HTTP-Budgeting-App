@@ -16,17 +16,17 @@ def _build():
 
 
 def _spotless_apply():
-    """Add a noqa comment to ignore"""
+    """Add # noqa # isort: skip comments to ignore"""
     subprocess.run([sys.executable, "-m", "ruff", "format", "."], check=True)
     subprocess.run([sys.executable, "-m", "ruff", "check", "--fix", "."], check=True)
 
 
-def _run_server():
+def _start_server():
     app.run(host="127.0.0.1", port=5000, debug=True)
 
 
 TASKS = {
     "build": _build,
     "spotlessApply": _spotless_apply,
-    "runServer": _run_server,
+    "startServer": _start_server,
 }

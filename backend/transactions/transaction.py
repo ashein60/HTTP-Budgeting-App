@@ -2,9 +2,9 @@ from dataclasses import dataclass
 from datetime import date as datetime
 
 from backend.metadata.enums import (
-    Cap_One_CC_Enums,
-    Cap_One_Checking_Enums,
-    Transaction_Enums,
+    CapOneCheckingAndSavingsFields,
+    CapOneCreditCardFields,
+    TransactionFields,
 )
 
 
@@ -21,21 +21,21 @@ class Transaction:
     @classmethod
     def from_sql_row(cls, row):
         return cls(
-            id=row[Transaction_Enums.ID.value],
-            date=row[Transaction_Enums.DATE.value],
-            account=row[Transaction_Enums.ACCOUNT.value],
-            description=row[Transaction_Enums.DESCRIPTION.value],
-            category=row[Transaction_Enums.CATEGORY.value],
-            debit=row[Transaction_Enums.DEBIT.value],
-            credit=row[Transaction_Enums.CREDIT.value],
+            id=row[TransactionFields.ID.value],
+            date=row[TransactionFields.DATE.value],
+            account=row[TransactionFields.ACCOUNT.value],
+            description=row[TransactionFields.DESCRIPTION.value],
+            category=row[TransactionFields.CATEGORY.value],
+            debit=row[TransactionFields.DEBIT.value],
+            credit=row[TransactionFields.CREDIT.value],
         )
 
     @classmethod
     def from_checking_and_saving_account_csv_row(cls, row):
-        transaction_type = row[Cap_One_Checking_Enums.TRANSACTION_TYPE.value]
+        transaction_type = row[CapOneCheckingAndSavingsFields.TRANSACTION_TYPE.value]
 
         # Capital One Checking/Savings accounts format date like 10/12/26 and need to be 2026-10-12
-        date_unformatted = row[Cap_One_Checking_Enums.TRANSACTION_DATE.value]
+        date_unformatted = row[CapOneCheckingAndSavingsFields.TRANSACTION_DATE.value]
         date_formated = datetime.strptime(date_unformatted, "%m/%d/%y").strftime(
             "%Y-%m-%d"
         )
@@ -43,16 +43,18 @@ class Transaction:
         return cls(
             id=None,
             date=date_formated,
-            account=row[Cap_One_Checking_Enums.ACCOUNT_NUMBER.value],
-            description=row[Cap_One_Checking_Enums.TRANSACTION_DESCRIPTION.value],
+            account=row[CapOneCheckingAndSavingsFields.ACCOUNT_NUMBER.value],
+            description=row[
+                CapOneCheckingAndSavingsFields.TRANSACTION_DESCRIPTION.value
+            ],
             category=str(
-                row[Cap_One_Checking_Enums.TRANSACTION_DESCRIPTION.value]
+                row[CapOneCheckingAndSavingsFields.TRANSACTION_DESCRIPTION.value]
             ).split()[0],
-            debit=row[Cap_One_Checking_Enums.TRANSACTION_AMOUNT.value]
-            if transaction_type == Cap_One_CC_Enums.DEBIT.value
+            debit=row[CapOneCheckingAndSavingsFields.TRANSACTION_AMOUNT.value]
+            if transaction_type == CapOneCreditCardFields.DEBIT.value
             else "",
-            credit=row[Cap_One_Checking_Enums.TRANSACTION_AMOUNT.value]
-            if transaction_type == Cap_One_CC_Enums.CREDIT.value
+            credit=row[CapOneCheckingAndSavingsFields.TRANSACTION_AMOUNT.value]
+            if transaction_type == CapOneCreditCardFields.CREDIT.value
             else "",
         )
 
@@ -60,12 +62,12 @@ class Transaction:
     def from_credit_card_csv_row(cls, row):
         return cls(
             id=None,
-            date=row[Cap_One_CC_Enums.POSTED_DATE.value],
-            account=row[Cap_One_CC_Enums.CARD_NUMBER.value],
-            description=row[Cap_One_CC_Enums.DESCRIPTION.value],
-            category=row[Cap_One_CC_Enums.CATEGORY.value],
-            debit=row[Cap_One_CC_Enums.DEBIT.value],
-            credit=row[Cap_One_CC_Enums.CREDIT.value],
+            date=row[CapOneCreditCardFields.POSTED_DATE.value],
+            account=row[CapOneCreditCardFields.CARD_NUMBER.value],
+            description=row[CapOneCreditCardFields.DESCRIPTION.value],
+            category=row[CapOneCreditCardFields.CATEGORY.value],
+            debit=row[CapOneCreditCardFields.DEBIT.value],
+            credit=row[CapOneCreditCardFields.CREDIT.value],
         )
 
     @property
