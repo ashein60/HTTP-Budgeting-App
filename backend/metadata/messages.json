@@ -1,0 +1,52 @@
+{
+    "IMPORT_SUCCESS": {
+        "success": true,
+        "code": 201,
+        "message": "'{items}' were imported successfully"
+    },
+    "IMPORT_FAIL": {
+        "success": false,
+        "code": 400,
+        "message": "Invalid Import file"
+    },
+    "INVALID_PERIOD": {
+        "success": false,
+        "code": 400,
+        "message": "Invalid period; use YYYY-MM format"
+    },
+    "GET_SUCCESS": {
+        "success": true,
+        "code": 200,
+        "message": "'{items}' retrieved successfully"
+    },
+    "GET_BY_SUCCESS": {
+        "success": true,
+        "code": 200,
+        "message": "'{items}' by '{by}' retrieved successfully"
+    },
+    "INVALID_CATEGORY": {
+        "success": false,
+        "code": 400,
+        "message": "A non-empty string 'name' is required"
+    },
+    "ALREADY_EXISTS": {
+        "success": false,
+        "code": 409,
+        "message": "'{item}' already exists"
+    },
+    "POST_SUCCESS": {
+        "success": true,
+        "code": 201,
+        "message": "The '{item}' '{value}' has been created successfully"
+    },
+    "NOT_FOUND": {
+        "success": false,
+        "code": 404,
+        "message": "The '{item}' '{value}' was not found"
+    },
+    "DELETE_SUCCESS": {
+        "success": true,
+        "code": 200,
+        "message": "The '{item}' '{value}' has been successfully deleted"
+    }
+}

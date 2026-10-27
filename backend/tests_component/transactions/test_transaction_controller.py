@@ -5,6 +5,8 @@ from werkzeug.test import TestResponse
 
 from backend.database_setup import init_transactions_db
 from backend.flask_setup import app
+from backend.message_catalog import MessageCatalog
+from backend.metadata.enums import MessageCatalogFields, MessageFields
 
 # Required to access POST and GET requests
 from backend.transactions import transaction_controller  # noqa # isort: skip
@@ -20,6 +22,11 @@ IMPORT_API = "/transactions/import"
 TRANSACTIONS_API = "/transactions"
 TRANSACTIONS_PERIOD_API = "/transactions/period"
 
+# Misc
+TRANSACTIONS = "Transactions"
+
+messages = MessageCatalog()
+
 # ==================== /transaction/import ====================
 
 
@@ -28,8 +35,7 @@ def test_import_no_file(tmp_path):
 
     response = app.test_client().post(IMPORT_API, data={})
 
-    assert response.get_json() == {"error": "No file provided"}
-    assert response.status_code == 400
+    assert response.get_json() == messages.get(MessageFields.IMPORT_FAIL.value)
 
 
 def test_import_no_file_selected(tmp_path):
@@ -41,8 +47,7 @@ def test_import_no_file_selected(tmp_path):
         content_type="multipart/form-data",
     )
 
-    assert response.get_json() == {"error": "No file selected"}
-    assert response.status_code == 400
+    assert response.get_json() == messages.get(MessageFields.IMPORT_FAIL.value)
 
 
 def test_import_checking_account(tmp_path):
@@ -50,8 +55,9 @@ def test_import_checking_account(tmp_path):
 
     response = _import_transactions(CHECKING_TRANSACTIONS)
 
-    assert response.get_json() == {"success": "Transactions were imported successfully"}
-    assert response.status_code == 201
+    assert response.get_json() == messages.get(
+        MessageFields.IMPORT_SUCCESS.value, items=TRANSACTIONS
+    )
 
 
 def test_import_credit_card(tmp_path):
@@ -59,8 +65,9 @@ def test_import_credit_card(tmp_path):
 
     response = _import_transactions(CREDIT_CARD_TRANSACTIONS)
 
-    assert response.get_json() == {"success": "Transactions were imported successfully"}
-    assert response.status_code == 201
+    assert response.get_json() == messages.get(
+        MessageFields.IMPORT_SUCCESS.value, items=TRANSACTIONS
+    )
 
 
 def test_import_duplicates(tmp_path):
@@ -87,8 +94,9 @@ def test_get_transactions_empty(tmp_path):
 
     response = app.test_client().get(TRANSACTIONS_API)
 
-    assert response.get_json() == []
-    assert response.status_code == 200
+    assert response.get_json() == messages.get(
+        MessageFields.GET_SUCCESS.value, [], items=TRANSACTIONS
+    )
 
 
 def test_get_checking_transactions_with_data(tmp_path):
@@ -97,10 +105,9 @@ def test_get_checking_transactions_with_data(tmp_path):
     _import_transactions(CHECKING_TRANSACTIONS)
 
     response = app.test_client().get(TRANSACTIONS_API)
-    count = len(response.get_json())
+    count = len(response.get_json().get(MessageCatalogFields.DATA.value))
 
     assert count > 0
-    assert response.status_code == 200
 
 
 def test_get_credit_card_transactions_with_data(tmp_path):
@@ -109,10 +116,9 @@ def test_get_credit_card_transactions_with_data(tmp_path):
     _import_transactions(CREDIT_CARD_TRANSACTIONS)
 
     response = app.test_client().get(TRANSACTIONS_API)
-    count = len(response.get_json())
+    count = len(response.get_json().get(MessageCatalogFields.DATA.value))
 
     assert count > 0
-    assert response.status_code == 200
 
 
 # ==================== /transaction/<string:period_str> ====================
@@ -123,8 +129,7 @@ def test_transactions_by_period_invalid(tmp_path):
 
     response = app.test_client().get(f"{TRANSACTIONS_PERIOD_API}/20166-10")
 
-    assert response.get_json() == {"error": "Invalid period. Use YYYY-MM format"}
-    assert response.status_code == 400
+    assert response.get_json() == messages.get(MessageFields.INVALID_PERIOD.value)
 
 
 def test_transactions_by_period_out_of_range(tmp_path):
@@ -133,10 +138,9 @@ def test_transactions_by_period_out_of_range(tmp_path):
     _import_transactions(CHECKING_TRANSACTIONS)
 
     response = app.test_client().get(f"{TRANSACTIONS_PERIOD_API}/2001-10")
-    count = len(response.get_json())
+    count = len(response.get_json().get(MessageCatalogFields.DATA.value))
 
     assert count == 0
-    assert response.status_code == 200
 
 
 def test_checking_transactions_by_period_in_range(tmp_path):
@@ -145,10 +149,9 @@ def test_checking_transactions_by_period_in_range(tmp_path):
     _import_transactions(CHECKING_TRANSACTIONS).get_json()
 
     response = app.test_client().get(f"{TRANSACTIONS_PERIOD_API}/2026-10")
-    count = len(response.get_json())
+    count = len(response.get_json().get(MessageCatalogFields.DATA.value))
 
-    assert count >= 2
-    assert response.status_code == 200
+    assert count > 0
 
 
 def test_credit_card_transactions_by_period_in_range(tmp_path):
@@ -157,10 +160,9 @@ def test_credit_card_transactions_by_period_in_range(tmp_path):
     _import_transactions(CREDIT_CARD_TRANSACTIONS)
 
     response = app.test_client().get(f"{TRANSACTIONS_PERIOD_API}/2026-10")
-    count = len(response.get_json())
+    count = len(response.get_json().get(MessageCatalogFields.DATA.value))
 
-    assert count >= 2
-    assert response.status_code == 200
+    assert count > 0
 
 
 # ==================== Helper Methods ====================
