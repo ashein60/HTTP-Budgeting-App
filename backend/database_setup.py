@@ -29,7 +29,7 @@ def init_transactions_db():
 def init_category_group_db():
     with sqlite3.connect(MiscEnums.DATABASE.value) as connection:
         query = """
-                    CREATE TABLE IF NOT EXISTS category_group (
+                    CREATE TABLE IF NOT EXISTS category_groups (
                         name TEXT PRIMARY KEY
                     )
                 """
@@ -44,9 +44,7 @@ def init_summary_db():
                         category TEXT PRIMARY KEY,
                         category_group TEXT NOT NULL,
                         expected TEXT NOT NULL,
-                        actual TEXT NOT NULL,
-                        FOREIGN KEY (category_group)
-                            REFERENCES category_group(name)
+                        actual TEXT NOT NULL
                     )
                 """
 

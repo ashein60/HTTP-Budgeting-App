@@ -1,8 +1,9 @@
 import sqlite3
+from dataclasses import asdict
 
 from flask import jsonify, request
 
-from backend.category_group import category_group_service
+from backend.category_groups import category_group_service
 from backend.flask_setup import app
 from backend.metadata.enums import CategoryGroupFields
 
@@ -26,3 +27,10 @@ def add_category_group():
         return jsonify({"error": "Category group already exists"}), 409
 
     return jsonify({CategoryGroupFields.NAME.value: name}), 201
+
+
+@app.route("/category_group", methods=["GET"])
+def get_category_groups():
+    category_groups = category_group_service.get_category_groups()
+    print(f"Hello: {category_groups}")
+    return jsonify([asdict(c) for c in category_groups]), 200
