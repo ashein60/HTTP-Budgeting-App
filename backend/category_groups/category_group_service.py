@@ -23,6 +23,17 @@ def get_category_groups() -> list[CategoryGroup]:
         return _convert_rows_to_category_groups(rows)
 
 
+def delete_category_group_by_name(name: str) -> bool:
+    with sqlite3.connect(MiscEnums.DATABASE.value) as connection:
+        query = "DELETE FROM category_groups WHERE name = ?"
+        cursor = connection.execute(
+            query,
+            (name,),  # name, communicates it's a tuple as required
+        )
+
+        return cursor.rowcount > 0
+
+
 # ==================== Private Methods ====================
 
 
