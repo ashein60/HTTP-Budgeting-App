@@ -36,6 +36,10 @@ class CategoryGroupFields(Enum):
     NAME = "name"
 
 
+class CategoryFields(Enum):
+    NAME = "name"
+
+
 class MessageFields(Enum):
     IMPORT_SUCCESS = "IMPORT_SUCCESS"
     IMPORT_FAIL = "IMPORT_FAIL"
