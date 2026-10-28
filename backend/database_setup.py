@@ -1,6 +1,12 @@
+import json
+import os
 import sqlite3
 
 from backend.metadata.enums import MiscEnums
+
+SEED_DATA_PATH = "backend/seed_data/"
+
+# ==================== init_all_dbs ====================
 
 
 def init_all_dbs():
@@ -49,3 +55,30 @@ def init_summary_db():
                 """
 
         connection.execute(query)
+
+
+# ==================== Seed Data ====================
+
+
+def init_all_seed_data():
+    init_category_group_seed_data()
+
+
+def init_category_group_seed_data():
+    file_path = f"{SEED_DATA_PATH}category_groups.json"
+    data = get_data_from_file(file_path)
+
+    if data is not None:
+        with sqlite3.connect(MiscEnums.DATABASE.value) as connection:
+            query = "INSERT OR IGNORE INTO category_groups (name) VALUES (?)"
+            connection.executemany(
+                query, [(row["name"],) for row in data["category_groups"]]
+            )
+
+
+def get_data_from_file(file_path):
+    if os.path.exists(file_path):
+        with open(file_path, "r", encoding="utf-8") as file:
+            return json.load(file)
+
+    return None
