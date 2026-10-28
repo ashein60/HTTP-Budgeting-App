@@ -1,6 +1,6 @@
 import sqlite3
 
-from backend.database_setup import init_category_group_db
+from backend.database_setup import init_category_groups_db
 from backend.flask_setup import app
 from backend.message_catalog import MessageCatalog
 from backend.metadata.enums import (
@@ -162,7 +162,7 @@ def test_delete_category_group_by_name_success(tmp_path):
 
 def _init_db(tmp_path):
     tmp_path / DATABASE
-    init_category_group_db()
+    init_category_groups_db()
 
     with sqlite3.connect(DATABASE) as connection:
         connection.execute("DELETE FROM category_groups")

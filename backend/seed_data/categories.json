@@ -1,0 +1,24 @@
+{
+  "categories": [
+    {"name": "Salary"},
+    {"name": "Hourly Wages"},
+
+    {"name": "Rent"},
+    {"name": "Utilities"},
+
+    {"name": "Phone Plan"},
+    {"name": "Car Insurance"},
+    {"name": "Subscriptions"},
+  
+    {"name": "Gas"},
+    {"name": "Groceries"},
+    {"name": "Eating Out"},
+    {"name": "Personal Care"},
+
+    {"name": "Student Loans"},
+
+    {"name": "House Found"},
+    {"name": "General Savings"}
+
+  ]
+}

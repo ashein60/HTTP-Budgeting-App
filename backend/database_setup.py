@@ -11,7 +11,8 @@ SEED_DATA_PATH = "backend/seed_data/"
 
 def init_all_dbs():
     init_transactions_db()
-    init_category_group_db()
+    init_category_groups_db()
+    init_categories_db()
     init_summary_db()
 
 
@@ -32,10 +33,21 @@ def init_transactions_db():
         connection.execute(query)
 
 
-def init_category_group_db():
+def init_category_groups_db():
     with sqlite3.connect(MiscEnums.DATABASE.value) as connection:
         query = """
                     CREATE TABLE IF NOT EXISTS category_groups (
+                        name TEXT PRIMARY KEY
+                    )
+                """
+
+        connection.execute(query)
+
+
+def init_categories_db():
+    with sqlite3.connect(MiscEnums.DATABASE.value) as connection:
+        query = """
+                    CREATE TABLE IF NOT EXISTS categories (
                         name TEXT PRIMARY KEY
                     )
                 """
@@ -61,10 +73,11 @@ def init_summary_db():
 
 
 def init_all_seed_data():
-    init_category_group_seed_data()
+    init_category_groups_seed_data()
+    init_categories_seed_data()
 
 
-def init_category_group_seed_data():
+def init_category_groups_seed_data():
     file_path = f"{SEED_DATA_PATH}category_groups.json"
     data = get_data_from_file(file_path)
 
@@ -73,6 +86,18 @@ def init_category_group_seed_data():
             query = "INSERT OR IGNORE INTO category_groups (name) VALUES (?)"
             connection.executemany(
                 query, [(row["name"],) for row in data["category_groups"]]
+            )
+
+
+def init_categories_seed_data():
+    file_path = f"{SEED_DATA_PATH}categories.json"
+    data = get_data_from_file(file_path)
+
+    if data is not None:
+        with sqlite3.connect(MiscEnums.DATABASE.value) as connection:
+            query = "INSERT OR IGNORE INTO categories (name) VALUES (?)"
+            connection.executemany(
+                query, [(row["name"],) for row in data["categories"]]
             )
 
 
