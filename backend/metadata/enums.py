@@ -36,5 +36,25 @@ class CategoryGroupFields(Enum):
     NAME = "name"
 
 
+class MessageFields(Enum):
+    IMPORT_SUCCESS = "IMPORT_SUCCESS"
+    IMPORT_FAIL = "IMPORT_FAIL"
+    INVALID_PERIOD = "INVALID_PERIOD"
+    GET_SUCCESS = "GET_SUCCESS"
+    GET_BY_SUCCESS = "GET_BY_SUCCESS"
+    INVALID_CATEGORY = "INVALID_CATEGORY"
+    ALREADY_EXISTS = "ALREADY_EXISTS"
+    POST_SUCCESS = "POST_SUCCESS"
+    NOT_FOUND = "NOT_FOUND"
+    DELETE_SUCCESS = "DELETE_SUCCESS"
+
+
+class MessageCatalogFields(Enum):
+    SUCCESS = "success"
+    CODE = "code"
+    MESSAGE = "message"
+    DATA = "data"
+
+
 class MiscEnums(Enum):
     DATABASE = "database.db"

@@ -1,0 +1,17 @@
+{
+    "IMPORT_SUCCESS": {
+        "success": true,
+        "code": 201,
+        "message": "'{items}' were imported successfully"
+    },
+    "IMPORT_FAIL": {
+        "success": false,
+        "code": 400,
+        "message": "Invalid Import file"
+    },
+    "GET_SUCCESS": {
+        "success": true,
+        "code": 200,
+        "message": "'{items}' retrieved successfully"
+    }
+}
