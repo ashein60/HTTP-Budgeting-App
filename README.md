@@ -5,6 +5,7 @@ A personal budgeting app designed to track monthly transactions and provide a fi
 - **POST /transactions/import:** Import from Capital One checking and savings accounts and credit cards. Duplicates are allowed within an import file, but transactions already in the database are not imported again.
 - **GET /transactions:** Retrieve all transactions.
 - **GET /transactions/period/<string:period_str>:** Retrieve transactions that are within the year and month provided (YYYY-MM).
+- ---
 - **POST /category_group:** Add a unique category group for the Summary table such as "Income" or "Savings".
 - **GET /category_group:** Retrieve all all category groups
 - **POST /category_group/delete:** Delete category group by name
