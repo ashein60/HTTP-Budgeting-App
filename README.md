@@ -2,13 +2,14 @@
 A personal budgeting app designed to track monthly transactions and provide a financial summary.
 
 ## Current Features
-- **POST /transactions/import:** Import from Capital One checking and savings accounts and credit cards. Duplicates are allowed within an import file, but transactions already in the database are not imported again.
-- **GET /transactions:** Retrieve all transactions.
-- **GET /transactions/period/<string:period_str>:** Retrieve transactions that are within the year and month provided (YYYY-MM).
-- ---
-- **POST /category_group:** Add a unique category group for the Summary table such as "Income" or "Savings".
-- **GET /category_group:** Retrieve all all category groups
-- **POST /category_group/delete:** Delete category group by name
+- **/transasctions:** Manage transactions with import, get all, and get by period (YYYY-MM)
+- **/category_group:** Manage category groups, such as "Income" or "Savings," with add by name, delete by name, and get all
+- **/category:** Manage categories, such as "Rent" or "Groceries," with add by name, delete by name, and get all
+
+## Planned Features
+- **Transaction Import Rules:** Restrict what data is imported and assign categories and category groups based on the description
+- **Summary Table and APIs:** Crucial for this software to be useful
+- **UI:** Will likely be made with React. Progress wont start until the MVP is finished. 
 
 ## Tech Stack
 - Python
