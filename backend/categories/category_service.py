@@ -1,13 +1,13 @@
 import sqlite3
 
+from backend import flask_handler
 from backend.categories.category import Category
-from backend.metadata.enums import MiscEnums
 
 # ==================== Public Methods ====================
 
 
 def add_category(category: Category):
-    with sqlite3.connect(MiscEnums.DATABASE.value) as connection:
+    with sqlite3.connect(flask_handler.get_database_path()) as connection:
         connection.execute("PRAGMA foreign_keys = ON;")
 
         query = "INSERT INTO categories (name, group_name) VALUES (?, ?)"
@@ -15,7 +15,7 @@ def add_category(category: Category):
 
 
 def get_categories() -> list[Category]:
-    with sqlite3.connect(MiscEnums.DATABASE.value) as connection:
+    with sqlite3.connect(flask_handler.get_database_path()) as connection:
         connection.row_factory = sqlite3.Row  # Allows csv style row format
         rows = connection.execute("SELECT * FROM categories").fetchall()
 
@@ -23,7 +23,7 @@ def get_categories() -> list[Category]:
 
 
 def delete_category_by_name(name: str) -> bool:
-    with sqlite3.connect(MiscEnums.DATABASE.value) as connection:
+    with sqlite3.connect(flask_handler.get_database_path()) as connection:
         query = "DELETE FROM categories WHERE name = ?"
         cursor = connection.execute(
             query,

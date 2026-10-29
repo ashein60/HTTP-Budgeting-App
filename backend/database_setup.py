@@ -2,7 +2,7 @@ import json
 import os
 import sqlite3
 
-from backend.metadata.enums import MiscEnums
+from backend import flask_handler
 
 SEED_DATA_PATH = "backend/seed_data/"
 
@@ -17,7 +17,7 @@ def init_all_dbs():
 
 
 def init_transactions_db():
-    with sqlite3.connect(MiscEnums.DATABASE.value) as connection:
+    with sqlite3.connect(flask_handler.get_database_path()) as connection:
         query = """
                     CREATE TABLE IF NOT EXISTS transactions (
                         id INTEGER PRIMARY KEY,
@@ -34,7 +34,7 @@ def init_transactions_db():
 
 
 def init_category_groups_db():
-    with sqlite3.connect(MiscEnums.DATABASE.value) as connection:
+    with sqlite3.connect(flask_handler.get_database_path()) as connection:
         query = """
                     CREATE TABLE IF NOT EXISTS category_groups (
                         name TEXT PRIMARY KEY
@@ -45,7 +45,7 @@ def init_category_groups_db():
 
 
 def init_categories_db():
-    with sqlite3.connect(MiscEnums.DATABASE.value) as connection:
+    with sqlite3.connect(flask_handler.get_database_path()) as connection:
         query = """
                     CREATE TABLE IF NOT EXISTS categories (
                         name TEXT PRIMARY KEY,
@@ -59,7 +59,7 @@ def init_categories_db():
 
 
 def init_summary_db():
-    with sqlite3.connect(MiscEnums.DATABASE.value) as connection:
+    with sqlite3.connect(flask_handler.get_database_path()) as connection:
         query = """
                     CREATE TABLE IF NOT EXISTS summary (
                         category TEXT PRIMARY KEY,
@@ -85,7 +85,7 @@ def init_category_groups_seed_data():
     data = get_data_from_file(file_path)
 
     if data is not None:
-        with sqlite3.connect(MiscEnums.DATABASE.value) as connection:
+        with sqlite3.connect(flask_handler.get_database_path()) as connection:
             query = "INSERT OR IGNORE INTO category_groups (name) VALUES (?)"
             connection.executemany(
                 query, [(row["name"],) for row in data["category_groups"]]
@@ -97,7 +97,7 @@ def init_categories_seed_data():
     data = get_data_from_file(file_path)
 
     if data is not None:
-        with sqlite3.connect(MiscEnums.DATABASE.value) as connection:
+        with sqlite3.connect(flask_handler.get_database_path()) as connection:
             query = "INSERT OR IGNORE INTO categories (name, group_name) VALUES (?, ?)"
             connection.executemany(
                 query, [(row["name"], row["group_name"]) for row in data["categories"]]

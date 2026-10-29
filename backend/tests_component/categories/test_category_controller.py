@@ -1,7 +1,7 @@
 import sqlite3
 
+from backend import flask_handler
 from backend.database_setup import init_categories_db, init_category_groups_db
-from backend.flask_setup import app
 from backend.message_catalog import MessageCatalog
 from backend.metadata.enums import CategoryFields, MessageCatalogFields, MessageFields
 
@@ -28,14 +28,16 @@ messages = MessageCatalog()
 def test_add_category_empty_data(tmp_path):
     _init_db(tmp_path)
 
-    response = app.test_client().post(CATEGORY_API, json={})
+    response = flask_handler.app.test_client().post(CATEGORY_API, json={})
     assert response.get_json() == messages.get(MessageFields.DATA_MISSING.value)
 
 
 def test_add_category_invalid_name_key(tmp_path):
     _init_db(tmp_path)
 
-    response = app.test_client().post(CATEGORY_API, json={"FooKey": "FooValue"})
+    response = flask_handler.app.test_client().post(
+        CATEGORY_API, json={"FooKey": "FooValue"}
+    )
 
     assert response.get_json() == messages.get(
         MessageFields.INVALID_DATA.value, item=CategoryFields.NAME.value
@@ -45,7 +47,7 @@ def test_add_category_invalid_name_key(tmp_path):
 def test_add_category_empty_group_name_value(tmp_path):
     _init_db(tmp_path)
 
-    response = app.test_client().post(
+    response = flask_handler.app.test_client().post(
         CATEGORY_API, json={CategoryFields.NAME.value: "Gas"}
     )
 
@@ -57,11 +59,11 @@ def test_add_category_empty_group_name_value(tmp_path):
 def test_add_category_already_exists(tmp_path):
     _init_db(tmp_path)
 
-    app.test_client().post(
+    flask_handler.app.test_client().post(
         CATEGORY_GROUP_API, json={CategoryFields.NAME.value: "Expense"}
     )
 
-    app.test_client().post(
+    flask_handler.app.test_client().post(
         CATEGORY_API,
         json={
             CategoryFields.NAME.value: "Gas",
@@ -69,7 +71,7 @@ def test_add_category_already_exists(tmp_path):
         },
     )
 
-    response = app.test_client().post(
+    response = flask_handler.app.test_client().post(
         CATEGORY_API,
         json={
             CategoryFields.NAME.value: "Gas",
@@ -85,7 +87,7 @@ def test_add_category_already_exists(tmp_path):
 def test_add_category_foreign_key_not_found(tmp_path):
     _init_db(tmp_path)
 
-    response = app.test_client().post(
+    response = flask_handler.app.test_client().post(
         CATEGORY_API,
         json={
             CategoryFields.NAME.value: "Gas",
@@ -106,11 +108,11 @@ def test_add_category_foreign_key_not_found(tmp_path):
 def test_add_category_random_caps(tmp_path):
     _init_db(tmp_path)
 
-    app.test_client().post(
+    flask_handler.app.test_client().post(
         CATEGORY_GROUP_API, json={CategoryFields.NAME.value: "Expense"}
     )
 
-    response = app.test_client().post(
+    response = flask_handler.app.test_client().post(
         CATEGORY_API,
         json={
             CategoryFields.NAME.value: "gAs",
@@ -125,11 +127,11 @@ def test_add_category_random_caps(tmp_path):
 def test_add_category_multiple_words(tmp_path):
     _init_db(tmp_path)
 
-    app.test_client().post(
+    flask_handler.app.test_client().post(
         CATEGORY_GROUP_API, json={CategoryFields.NAME.value: "Expense"}
     )
 
-    response = app.test_client().post(
+    response = flask_handler.app.test_client().post(
         CATEGORY_API,
         json={
             CategoryFields.NAME.value: "Gas Ratio",
@@ -148,18 +150,18 @@ def test_add_category_multiple_words(tmp_path):
 def test_get_category_empty(tmp_path):
     _init_db(tmp_path)
 
-    response = app.test_client().get(CATEGORY_API)
+    response = flask_handler.app.test_client().get(CATEGORY_API)
     assert response.get_json().get(MessageCatalogFields.DATA.value) == []
 
 
 def test_get_category_with_data(tmp_path):
     _init_db(tmp_path)
 
-    app.test_client().post(
+    flask_handler.app.test_client().post(
         CATEGORY_GROUP_API, json={CategoryFields.NAME.value: "Expense"}
     )
 
-    app.test_client().post(
+    flask_handler.app.test_client().post(
         CATEGORY_API,
         json={
             CategoryFields.NAME.value: "Gas Ratio",
@@ -167,7 +169,7 @@ def test_get_category_with_data(tmp_path):
         },
     )
 
-    response = app.test_client().get(CATEGORY_API)
+    response = flask_handler.app.test_client().get(CATEGORY_API)
 
     assert response.get_json().get(MessageCatalogFields.DATA.value) == [
         {
@@ -183,7 +185,7 @@ def test_get_category_with_data(tmp_path):
 def test_delete_category_by_name_empty_data(tmp_path):
     _init_db(tmp_path)
 
-    response = app.test_client().post(CATEGORY_DELETE_API, json={})
+    response = flask_handler.app.test_client().post(CATEGORY_DELETE_API, json={})
 
     assert response.get_json() == messages.get(MessageFields.INVALID_CATEGORY.value)
 
@@ -191,7 +193,9 @@ def test_delete_category_by_name_empty_data(tmp_path):
 def test_delete_category_by_name_invalid_name_key(tmp_path):
     _init_db(tmp_path)
 
-    response = app.test_client().post(CATEGORY_DELETE_API, json={"namedd": "Gas"})
+    response = flask_handler.app.test_client().post(
+        CATEGORY_DELETE_API, json={"namedd": "Gas"}
+    )
 
     assert response.get_json() == messages.get(MessageFields.INVALID_CATEGORY.value)
 
@@ -199,7 +203,7 @@ def test_delete_category_by_name_invalid_name_key(tmp_path):
 def test_delete_category_by_name_empty_name_value(tmp_path):
     _init_db(tmp_path)
 
-    response = app.test_client().post(
+    response = flask_handler.app.test_client().post(
         CATEGORY_DELETE_API, json={CategoryFields.NAME.value: "  "}
     )
 
@@ -209,7 +213,7 @@ def test_delete_category_by_name_empty_name_value(tmp_path):
 def test_delete_category_by_name_not_found(tmp_path):
     _init_db(tmp_path)
 
-    response = app.test_client().post(
+    response = flask_handler.app.test_client().post(
         CATEGORY_DELETE_API, json={CategoryFields.NAME.value: "Gas"}
     )
 
@@ -221,11 +225,11 @@ def test_delete_category_by_name_not_found(tmp_path):
 def test_delete_category_by_name_success(tmp_path):
     _init_db(tmp_path)
 
-    app.test_client().post(
+    flask_handler.app.test_client().post(
         CATEGORY_GROUP_API, json={CategoryFields.NAME.value: "Expense"}
     )
 
-    app.test_client().post(
+    flask_handler.app.test_client().post(
         CATEGORY_API,
         json={
             CategoryFields.NAME.value: "gAS",
@@ -233,7 +237,9 @@ def test_delete_category_by_name_success(tmp_path):
         },
     )
 
-    response = app.test_client().post(CATEGORY_DELETE_API, json={"name": "GaS"})
+    response = flask_handler.app.test_client().post(
+        CATEGORY_DELETE_API, json={"name": "GaS"}
+    )
 
     assert response.get_json() == messages.get(
         MessageFields.DELETE_SUCCESS.value, item=CATEGORY, value="Gas"
@@ -244,10 +250,10 @@ def test_delete_category_by_name_success(tmp_path):
 
 
 def _init_db(tmp_path):
-    tmp_path / DATABASE
+    flask_handler.set_database_path(tmp_path / DATABASE)
     init_category_groups_db()
     init_categories_db()
 
-    with sqlite3.connect(DATABASE) as connection:
+    with sqlite3.connect(flask_handler.get_database_path()) as connection:
         connection.execute("DELETE FROM category_groups")
         connection.execute("DELETE FROM categories")

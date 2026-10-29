@@ -3,7 +3,7 @@ import sqlite3
 from flask import request
 
 from backend.category_groups import category_group_service
-from backend.flask_setup import app
+from backend.flask_handler import app
 from backend.message_catalog import MessageCatalog
 from backend.metadata.enums import CategoryGroupFields, MessageFields
 

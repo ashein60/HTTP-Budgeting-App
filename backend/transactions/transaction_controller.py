@@ -4,7 +4,7 @@ from io import TextIOWrapper
 
 from flask import request
 
-from backend.flask_setup import app
+from backend.flask_handler import app
 from backend.message_catalog import MessageCatalog
 from backend.metadata.enums import MessageFields
 from backend.transactions import transaction_service

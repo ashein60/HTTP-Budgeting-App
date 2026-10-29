@@ -1,7 +1,7 @@
 import sqlite3
 
+from backend import flask_handler
 from backend.database_setup import init_category_groups_db
-from backend.flask_setup import app
 from backend.message_catalog import MessageCatalog
 from backend.metadata.enums import (
     MessageCatalogFields,
@@ -29,14 +29,16 @@ messages = MessageCatalog()
 def test_add_category_group_empty_data(tmp_path):
     _init_db(tmp_path)
 
-    response = app.test_client().post(CATEGORY_GROUP_API, json={})
+    response = flask_handler.app.test_client().post(CATEGORY_GROUP_API, json={})
     assert response.get_json() == messages.get(MessageFields.INVALID_CATEGORY.value)
 
 
 def test_add_category_group_invalid_name_key(tmp_path):
     _init_db(tmp_path)
 
-    response = app.test_client().post(CATEGORY_GROUP_API, json={"FooKey": "FooValue"})
+    response = flask_handler.app.test_client().post(
+        CATEGORY_GROUP_API, json={"FooKey": "FooValue"}
+    )
 
     assert response.get_json() == messages.get(MessageFields.INVALID_CATEGORY.value)
 
@@ -44,7 +46,9 @@ def test_add_category_group_invalid_name_key(tmp_path):
 def test_add_category_group_empty_name_value(tmp_path):
     _init_db(tmp_path)
 
-    response = app.test_client().post(CATEGORY_GROUP_API, json={"name": "   "})
+    response = flask_handler.app.test_client().post(
+        CATEGORY_GROUP_API, json={"name": "   "}
+    )
 
     assert response.get_json() == messages.get(MessageFields.INVALID_CATEGORY.value)
 
@@ -52,8 +56,10 @@ def test_add_category_group_empty_name_value(tmp_path):
 def test_add_category_group_already_exists(tmp_path):
     _init_db(tmp_path)
 
-    app.test_client().post(CATEGORY_GROUP_API, json={"name": "Income"})
-    response = app.test_client().post(CATEGORY_GROUP_API, json={"name": "Income"})
+    flask_handler.app.test_client().post(CATEGORY_GROUP_API, json={"name": "Income"})
+    response = flask_handler.app.test_client().post(
+        CATEGORY_GROUP_API, json={"name": "Income"}
+    )
 
     assert response.get_json() == messages.get(
         MessageFields.ALREADY_EXISTS.value, item=CATEGORY_GROUP
@@ -63,7 +69,9 @@ def test_add_category_group_already_exists(tmp_path):
 def test_add_category_group_random_caps(tmp_path):
     _init_db(tmp_path)
 
-    response = app.test_client().post(CATEGORY_GROUP_API, json={"name": "inCOmE"})
+    response = flask_handler.app.test_client().post(
+        CATEGORY_GROUP_API, json={"name": "inCOmE"}
+    )
 
     message = response.get_json().get(MessageCatalogFields.MESSAGE.value)
 
@@ -73,7 +81,9 @@ def test_add_category_group_random_caps(tmp_path):
 def test_add_category_group_multiple_words(tmp_path):
     _init_db(tmp_path)
 
-    response = app.test_client().post(CATEGORY_GROUP_API, json={"name": "Income Ratio"})
+    response = flask_handler.app.test_client().post(
+        CATEGORY_GROUP_API, json={"name": "Income Ratio"}
+    )
 
     message = response.get_json().get(MessageCatalogFields.MESSAGE.value)
 
@@ -86,16 +96,16 @@ def test_add_category_group_multiple_words(tmp_path):
 def test_get_category_group_empty(tmp_path):
     _init_db(tmp_path)
 
-    response = app.test_client().get(CATEGORY_GROUP_API)
+    response = flask_handler.app.test_client().get(CATEGORY_GROUP_API)
     assert response.get_json().get(MessageCatalogFields.DATA.value) == []
 
 
 def test_get_category_group_with_data(tmp_path):
     _init_db(tmp_path)
 
-    app.test_client().post(CATEGORY_GROUP_API, json={"name": "Income"})
+    flask_handler.app.test_client().post(CATEGORY_GROUP_API, json={"name": "Income"})
 
-    response = app.test_client().get(CATEGORY_GROUP_API)
+    response = flask_handler.app.test_client().get(CATEGORY_GROUP_API)
 
     assert response.get_json().get(MessageCatalogFields.DATA.value) == [
         {"name": "Income"}
@@ -108,7 +118,7 @@ def test_get_category_group_with_data(tmp_path):
 def test_delete_category_group_by_name_empty_data(tmp_path):
     _init_db(tmp_path)
 
-    response = app.test_client().post(CATEGORY_GROUP_DELETE_API, json={})
+    response = flask_handler.app.test_client().post(CATEGORY_GROUP_DELETE_API, json={})
 
     assert response.get_json() == messages.get(MessageFields.INVALID_CATEGORY.value)
 
@@ -116,7 +126,7 @@ def test_delete_category_group_by_name_empty_data(tmp_path):
 def test_delete_category_group_by_name_invalid_name_key(tmp_path):
     _init_db(tmp_path)
 
-    response = app.test_client().post(
+    response = flask_handler.app.test_client().post(
         CATEGORY_GROUP_DELETE_API, json={"namedd": "Income"}
     )
 
@@ -126,7 +136,9 @@ def test_delete_category_group_by_name_invalid_name_key(tmp_path):
 def test_delete_category_group_by_name_empty_name_value(tmp_path):
     _init_db(tmp_path)
 
-    response = app.test_client().post(CATEGORY_GROUP_DELETE_API, json={"name": "  "})
+    response = flask_handler.app.test_client().post(
+        CATEGORY_GROUP_DELETE_API, json={"name": "  "}
+    )
 
     assert response.get_json() == messages.get(MessageFields.INVALID_CATEGORY.value)
 
@@ -134,7 +146,7 @@ def test_delete_category_group_by_name_empty_name_value(tmp_path):
 def test_delete_category_group_by_name_not_found(tmp_path):
     _init_db(tmp_path)
 
-    response = app.test_client().post(
+    response = flask_handler.app.test_client().post(
         CATEGORY_GROUP_DELETE_API, json={"name": "Income"}
     )
 
@@ -146,9 +158,9 @@ def test_delete_category_group_by_name_not_found(tmp_path):
 def test_delete_category_group_by_name_success(tmp_path):
     _init_db(tmp_path)
 
-    app.test_client().post(CATEGORY_GROUP_API, json={"name": "incOme"})
+    flask_handler.app.test_client().post(CATEGORY_GROUP_API, json={"name": "incOme"})
 
-    response = app.test_client().post(
+    response = flask_handler.app.test_client().post(
         CATEGORY_GROUP_DELETE_API, json={"name": "IncoMe"}
     )
 
@@ -161,8 +173,8 @@ def test_delete_category_group_by_name_success(tmp_path):
 
 
 def _init_db(tmp_path):
-    tmp_path / DATABASE
+    flask_handler.set_database_path(tmp_path / DATABASE)
     init_category_groups_db()
 
-    with sqlite3.connect(DATABASE) as connection:
+    with sqlite3.connect(flask_handler.get_database_path()) as connection:
         connection.execute("DELETE FROM category_groups")

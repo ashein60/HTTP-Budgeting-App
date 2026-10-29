@@ -5,7 +5,7 @@ from flask import request
 from backend.categories import category_service
 from backend.categories.category import Category
 from backend.common import check_missing_fields_from_json_data
-from backend.flask_setup import app
+from backend.flask_handler import app
 from backend.message_catalog import MessageCatalog
 from backend.metadata.enums import CategoryFields, MessageFields, SqliteErrorFields
 
