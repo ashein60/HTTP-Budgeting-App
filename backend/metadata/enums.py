@@ -38,6 +38,7 @@ class CategoryGroupFields(Enum):
 
 class CategoryFields(Enum):
     NAME = "name"
+    GROUP_NAME = "group_name"
 
 
 class MessageFields(Enum):
@@ -51,6 +52,14 @@ class MessageFields(Enum):
     POST_SUCCESS = "POST_SUCCESS"
     NOT_FOUND = "NOT_FOUND"
     DELETE_SUCCESS = "DELETE_SUCCESS"
+    DATA_MISSING = "DATA_MISSING"
+    INVALID_DATA = "INVALID_DATA"
+    FOREIGN_KEY_NOT_FOUND = "FOREIGN_KEY_NOT_FOUND"
+
+
+class SqliteErrorFields(Enum):
+    SQLITE_CONSTRAINT_PRIMARYKEY = "SQLITE_CONSTRAINT_PRIMARYKEY"
+    SQLITE_CONSTRAINT_FOREIGNKEY = "SQLITE_CONSTRAINT_FOREIGNKEY"
 
 
 class MessageCatalogFields(Enum):

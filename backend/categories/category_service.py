@@ -6,13 +6,12 @@ from backend.metadata.enums import MiscEnums
 # ==================== Public Methods ====================
 
 
-def add_category(name: str):
+def add_category(category: Category):
     with sqlite3.connect(MiscEnums.DATABASE.value) as connection:
-        query = "INSERT INTO categories (name) VALUES (?)"
-        connection.execute(
-            query,
-            (name,),  # name, communicates it's a tuple as required
-        )
+        connection.execute("PRAGMA foreign_keys = ON;")
+
+        query = "INSERT INTO categories (name, group_name) VALUES (?, ?)"
+        connection.execute(query, category.params)
 
 
 def get_categories() -> list[Category]:

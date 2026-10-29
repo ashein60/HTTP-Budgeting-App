@@ -1,24 +1,60 @@
 {
   "categories": [
-    {"name": "Salary"},
-    {"name": "Hourly Wages"},
-
-    {"name": "Rent"},
-    {"name": "Utilities"},
-
-    {"name": "Phone Plan"},
-    {"name": "Car Insurance"},
-    {"name": "Subscriptions"},
-  
-    {"name": "Gas"},
-    {"name": "Groceries"},
-    {"name": "Eating Out"},
-    {"name": "Personal Care"},
-
-    {"name": "Student Loans"},
-
-    {"name": "House Found"},
-    {"name": "General Savings"}
-
+    {
+      "name": "Salary",
+      "group_name": "Income"
+    },
+    {
+      "name": "Hourly Wages",
+      "group_name": "Income"
+    },
+    {
+      "name": "Rent",
+      "group_name": "Fixed Expenses"
+    },
+    {
+      "name": "Utilities",
+      "group_name": "Fixed Expenses"
+    },
+    {
+      "name": "Phone Plan",
+      "group_name": "Fixed Expenses"
+    },
+    {
+      "name": "Car Insurance",
+      "group_name": "Fixed Expenses"
+    },
+    {
+      "name": "Subscriptions",
+      "group_name": "Fixed Expenses"
+    },
+    {
+      "name": "Gas",
+      "group_name": "Variable Expenses"
+    },
+    {
+      "name": "Groceries",
+      "group_name": "Variable Expenses"
+    },
+    {
+      "name": "Eating Out",
+      "group_name": "Variable Expenses"
+    },
+    {
+      "name": "Personal Care",
+      "group_name": "Variable Expenses"
+    },
+    {
+      "name": "Student Loans",
+      "group_name": "Debt"
+    },
+    {
+      "name": "House Found",
+      "group_name": "Savings"
+    },
+    {
+      "name": "General Savings",
+      "group_name": "Savings"
+    }
   ]
 }

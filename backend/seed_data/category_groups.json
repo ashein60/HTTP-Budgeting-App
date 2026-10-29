@@ -1,9 +1,19 @@
 {
   "category_groups": [
-    {"name": "Income"},
-    {"name": "Savings"},
-    {"name": "Debt"},
-    {"name": "Fixed Expenses"},
-    {"name": "Variable Expenses"}
+    {
+      "name": "Income"
+    },
+    {
+      "name": "Savings"
+    },
+    {
+      "name": "Debt"
+    },
+    {
+      "name": "Fixed Expenses"
+    },
+    {
+      "name": "Variable Expenses"
+    }
   ]
 }
