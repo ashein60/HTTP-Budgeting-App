@@ -48,5 +48,20 @@
         "success": true,
         "code": 200,
         "message": "The '{item}' '{value}' has been successfully deleted"
+    },
+    "DATA_MISSING": {
+        "success": false,
+        "code": 400,
+        "message": "Data is required"
+    },
+    "INVALID_DATA": {
+        "success": false,
+        "code": 400,
+        "message": "A valid '{item}' is required"
+    },
+    "FOREIGN_KEY_NOT_FOUND": {
+        "success": false,
+        "code": 404,
+        "message": "The foreign key was not found"
     }
 }

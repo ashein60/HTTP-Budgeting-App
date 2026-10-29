@@ -48,7 +48,10 @@ def init_categories_db():
     with sqlite3.connect(MiscEnums.DATABASE.value) as connection:
         query = """
                     CREATE TABLE IF NOT EXISTS categories (
-                        name TEXT PRIMARY KEY
+                        name TEXT PRIMARY KEY,
+                        group_name TEXT NOT NULL,
+                        FOREIGN KEY (group_name)
+                            REFERENCES category_groups(name)
                     )
                 """
 
@@ -95,9 +98,9 @@ def init_categories_seed_data():
 
     if data is not None:
         with sqlite3.connect(MiscEnums.DATABASE.value) as connection:
-            query = "INSERT OR IGNORE INTO categories (name) VALUES (?)"
+            query = "INSERT OR IGNORE INTO categories (name, group_name) VALUES (?, ?)"
             connection.executemany(
-                query, [(row["name"],) for row in data["categories"]]
+                query, [(row["name"], row["group_name"]) for row in data["categories"]]
             )
 
 
