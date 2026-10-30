@@ -1,7 +1,8 @@
 import subprocess
 import sys
 
-from backend.flask_setup import app
+from backend.database_setup import init_all_seed_data
+from backend.flask_handler import app
 
 
 def init_tasks():
@@ -13,6 +14,10 @@ def init_tasks():
 
 def _build():
     subprocess.run([sys.executable, "-m", "compileall", "."], check=True)
+
+
+def _create_seed_data():
+    init_all_seed_data()
 
 
 def _spotless_apply():
@@ -27,6 +32,7 @@ def _start_server():
 
 TASKS = {
     "build": _build,
+    "createSeedData": _create_seed_data,
     "spotlessApply": _spotless_apply,
     "startServer": _start_server,
 }

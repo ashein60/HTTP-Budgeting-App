@@ -3,14 +3,15 @@ from csv import DictReader
 from datetime import datetime
 from sqlite3 import Connection
 
-from backend.metadata.enums import CapOneCheckingAndSavingsFields, MiscEnums
+from backend import flask_handler
+from backend.metadata.enums import CapOneCheckingAndSavingsFields
 from backend.transactions.transaction import Transaction
 
 # ==================== Public Methods ====================
 
 
 def import_transactions(reader: DictReader[str]):
-    with sqlite3.connect(MiscEnums.DATABASE.value) as connection:
+    with sqlite3.connect(flask_handler.get_database_path()) as connection:
         transactions = get_transactions()
 
         if CapOneCheckingAndSavingsFields.ACCOUNT_NUMBER.value in reader.fieldnames:
@@ -25,7 +26,7 @@ def import_transactions(reader: DictReader[str]):
 
 
 def get_transactions() -> list[Transaction]:
-    with sqlite3.connect(MiscEnums.DATABASE.value) as connection:
+    with sqlite3.connect(flask_handler.get_database_path()) as connection:
         connection.row_factory = sqlite3.Row  # Allows csv style row format
         rows = connection.execute("SELECT * FROM transactions").fetchall()
 
@@ -35,7 +36,7 @@ def get_transactions() -> list[Transaction]:
 def get_transactions_by_period(period: datetime) -> list[Transaction]:
     start_date, end_date = _convert_to_month_range(period)
 
-    with sqlite3.connect(MiscEnums.DATABASE.value) as connection:
+    with sqlite3.connect(flask_handler.get_database_path()) as connection:
         connection.row_factory = sqlite3.Row  # Allows csv style row format
 
         query = """
