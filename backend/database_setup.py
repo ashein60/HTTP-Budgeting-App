@@ -3,6 +3,7 @@ import os
 import sqlite3
 
 from backend import flask_handler
+from backend.metadata.enums import CategoryFields, CategoryGroupFields
 
 SEED_DATA_PATH = "backend/seed_data/"
 
@@ -13,7 +14,6 @@ def init_all_dbs():
     init_transactions_db()
     init_category_groups_db()
     init_categories_db()
-    init_summary_db()
 
 
 def init_transactions_db():
@@ -49,23 +49,10 @@ def init_categories_db():
         query = """
                     CREATE TABLE IF NOT EXISTS categories (
                         name TEXT PRIMARY KEY,
+                        expected TEXT NOT NULL,
                         group_name TEXT NOT NULL,
                         FOREIGN KEY (group_name)
                             REFERENCES category_groups(name)
-                    )
-                """
-
-        connection.execute(query)
-
-
-def init_summary_db():
-    with sqlite3.connect(flask_handler.get_database_path()) as connection:
-        query = """
-                    CREATE TABLE IF NOT EXISTS summary (
-                        category TEXT PRIMARY KEY,
-                        category_group TEXT NOT NULL,
-                        expected TEXT NOT NULL,
-                        actual TEXT NOT NULL
                     )
                 """
 
@@ -88,7 +75,11 @@ def init_category_groups_seed_data():
         with sqlite3.connect(flask_handler.get_database_path()) as connection:
             query = "INSERT OR IGNORE INTO category_groups (name) VALUES (?)"
             connection.executemany(
-                query, [(row["name"],) for row in data["category_groups"]]
+                query,
+                [
+                    (row[CategoryGroupFields.NAME.value],)
+                    for row in data["category_groups"]
+                ],
             )
 
 
@@ -98,9 +89,17 @@ def init_categories_seed_data():
 
     if data is not None:
         with sqlite3.connect(flask_handler.get_database_path()) as connection:
-            query = "INSERT OR IGNORE INTO categories (name, group_name) VALUES (?, ?)"
+            query = "INSERT OR IGNORE INTO categories (name, expected, group_name) VALUES (?, ?, ?)"
             connection.executemany(
-                query, [(row["name"], row["group_name"]) for row in data["categories"]]
+                query,
+                [
+                    (
+                        row[CategoryFields.NAME.value],
+                        row[CategoryFields.EXPECTED.value],
+                        row[CategoryFields.GROUP_NAME.value],
+                    )
+                    for row in data["categories"]
+                ],
             )
 
 

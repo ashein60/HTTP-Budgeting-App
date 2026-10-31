@@ -1,5 +1,5 @@
 def check_missing_fields_from_json_data(data, fields):
-    """Used for POST requests, so missing data doesn't become repetitive"""
+    """Used for POST requests, so missing data doesn't become repetitive. No data should be None"""
     for field in fields:
         if (
             not isinstance(data.get(field.value), str)

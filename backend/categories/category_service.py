@@ -10,7 +10,7 @@ def add_category(category: Category):
     with sqlite3.connect(flask_handler.get_database_path()) as connection:
         connection.execute("PRAGMA foreign_keys = ON;")
 
-        query = "INSERT INTO categories (name, group_name) VALUES (?, ?)"
+        query = "INSERT INTO categories (name, expected, group_name) VALUES (?, ?, ?)"
         connection.execute(query, category.params)
 
 
@@ -27,7 +27,7 @@ def delete_category_by_name(name: str) -> bool:
         query = "DELETE FROM categories WHERE name = ?"
         cursor = connection.execute(
             query,
-            (name,),  # name, communicates it's a tuple as required
+            (name,),  # Required to be a tuple
         )
 
         return cursor.rowcount > 0

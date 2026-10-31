@@ -44,11 +44,24 @@ def test_add_category_invalid_name_key(tmp_path):
     )
 
 
-def test_add_category_empty_group_name_value(tmp_path):
+def test_add_category_empty_expected_value(tmp_path):
     _init_db(tmp_path)
 
     response = flask_handler.app.test_client().post(
         CATEGORY_API, json={CategoryFields.NAME.value: "Gas"}
+    )
+
+    assert response.get_json() == messages.get(
+        MessageFields.INVALID_DATA.value, item=CategoryFields.EXPECTED.value
+    )
+
+
+def test_add_category_empty_group_name_value(tmp_path):
+    _init_db(tmp_path)
+
+    response = flask_handler.app.test_client().post(
+        CATEGORY_API,
+        json={CategoryFields.NAME.value: "Gas", CategoryFields.EXPECTED.value: "0"},
     )
 
     assert response.get_json() == messages.get(
@@ -67,6 +80,7 @@ def test_add_category_already_exists(tmp_path):
         CATEGORY_API,
         json={
             CategoryFields.NAME.value: "Gas",
+            CategoryFields.EXPECTED.value: "0",
             CategoryFields.GROUP_NAME.value: "Expense",
         },
     )
@@ -75,6 +89,7 @@ def test_add_category_already_exists(tmp_path):
         CATEGORY_API,
         json={
             CategoryFields.NAME.value: "Gas",
+            CategoryFields.EXPECTED.value: "0",
             CategoryFields.GROUP_NAME.value: "Expense",
         },
     )
@@ -91,6 +106,7 @@ def test_add_category_foreign_key_not_found(tmp_path):
         CATEGORY_API,
         json={
             CategoryFields.NAME.value: "Gas",
+            CategoryFields.EXPECTED.value: "0",
             CategoryFields.GROUP_NAME.value: "Expense",
         },
     )
@@ -116,6 +132,7 @@ def test_add_category_random_caps(tmp_path):
         CATEGORY_API,
         json={
             CategoryFields.NAME.value: "gAs",
+            CategoryFields.EXPECTED.value: "0",
             CategoryFields.GROUP_NAME.value: "eXpEnse",
         },
     )
@@ -135,6 +152,7 @@ def test_add_category_multiple_words(tmp_path):
         CATEGORY_API,
         json={
             CategoryFields.NAME.value: "Gas Ratio",
+            CategoryFields.EXPECTED.value: "0",
             CategoryFields.GROUP_NAME.value: "Expense",
         },
     )
@@ -165,6 +183,7 @@ def test_get_category_with_data(tmp_path):
         CATEGORY_API,
         json={
             CategoryFields.NAME.value: "Gas Ratio",
+            CategoryFields.EXPECTED.value: "0",
             CategoryFields.GROUP_NAME.value: "Expense",
         },
     )
@@ -174,6 +193,7 @@ def test_get_category_with_data(tmp_path):
     assert response.get_json().get(MessageCatalogFields.DATA.value) == [
         {
             CategoryFields.NAME.value: "Gas Ratio",
+            CategoryFields.EXPECTED.value: "0",
             CategoryFields.GROUP_NAME.value: "Expense",
         }
     ]
@@ -233,6 +253,7 @@ def test_delete_category_by_name_success(tmp_path):
         CATEGORY_API,
         json={
             CategoryFields.NAME.value: "gAS",
+            CategoryFields.EXPECTED.value: "0",
             CategoryFields.GROUP_NAME.value: "Expense",
         },
     )
