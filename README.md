@@ -1,5 +1,10 @@
 ## Personal Budgeting App
-A personal budgeting app designed to track monthly transactions and provide a financial summary.
+A personal budgeting app designed to track monthly transactions and provide a financial summary. 
+
+## Basic Structure
+- **Transactions:** id (PK), date, account, description, category, debit, credit
+- **Category Groups:** name (PK), actual total, expected total
+- **Categories:** name (PK), group name (FK), actual, expected
 
 ## Getting Started
 - From the command line, please run the following: **python -m backend.main build createSeedData startServer**
@@ -12,7 +17,6 @@ A personal budgeting app designed to track monthly transactions and provide a fi
 - **/category:** Manage categories, such as "Rent" or "Groceries," with add by name, delete by name, and get all
 
 ## Planned Features
-- **Summary Table and APIs:** Crucial for this software to be useful
 - **Transaction Import Rules:** Restrict what data is imported and assign categories and category groups based on the description
 - **Authentication:** Since this is a small project, I'll just manage one database with one username and password
 - **UI:** Will likely be made with React. Progress wont start until the MVP is finished. 
