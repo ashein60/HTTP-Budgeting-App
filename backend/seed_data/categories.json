@@ -2,58 +2,72 @@
   "categories": [
     {
       "name": "Salary",
+      "expected": 0,
       "group_name": "Income"
     },
     {
       "name": "Hourly Wages",
+      "expected": 0,
       "group_name": "Income"
     },
     {
       "name": "Rent",
+      "expected": 0,
       "group_name": "Fixed Expenses"
     },
     {
       "name": "Utilities",
+      "expected": 0,
       "group_name": "Fixed Expenses"
     },
     {
       "name": "Phone Plan",
+      "expected": 0,
       "group_name": "Fixed Expenses"
     },
     {
       "name": "Car Insurance",
+      "expected": 0,
       "group_name": "Fixed Expenses"
     },
     {
       "name": "Subscriptions",
+      "expected": 0,
       "group_name": "Fixed Expenses"
     },
     {
       "name": "Gas",
+      "expected": 0,
       "group_name": "Variable Expenses"
     },
     {
       "name": "Groceries",
+      "expected": 0,
       "group_name": "Variable Expenses"
     },
     {
       "name": "Eating Out",
+      "expected": 0,
       "group_name": "Variable Expenses"
     },
     {
       "name": "Personal Care",
+      "expected": 0,
       "group_name": "Variable Expenses"
     },
     {
       "name": "Student Loans",
+      "expected": 0,
       "group_name": "Debt"
     },
     {
       "name": "House Found",
+      "expected": 0,
       "group_name": "Savings"
     },
     {
       "name": "General Savings",
+      "expected": 0,
       "group_name": "Savings"
     }
   ]

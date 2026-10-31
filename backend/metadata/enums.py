@@ -38,6 +38,7 @@ class CategoryGroupFields(Enum):
 
 class CategoryFields(Enum):
     NAME = "name"
+    EXPECTED = "expected"
     GROUP_NAME = "group_name"
 
 
