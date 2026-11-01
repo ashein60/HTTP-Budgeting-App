@@ -63,5 +63,10 @@
         "success": false,
         "code": 404,
         "message": "The foreign key was not found"
+    },
+    "CONVERT_TO_DECIMAL_FAIL": {
+        "success": false,
+        "code": 40,
+        "message": "An invalid currency value was used"
     }
 }

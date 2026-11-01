@@ -1,5 +1,6 @@
 import csv
 from datetime import datetime
+from decimal import InvalidOperation
 from io import TextIOWrapper
 
 from flask import request
@@ -28,7 +29,10 @@ def import_transactions():
 
     reader = csv.DictReader(TextIOWrapper(file.stream, encoding="utf-8-sig"))
 
-    transaction_service.import_transactions(reader)
+    try:
+        transaction_service.import_transactions(reader)
+    except InvalidOperation:
+        return messages.get(MessageFields.CONVERT_TO_CURRENCY_FAIL)
 
     return messages.get(MessageFields.IMPORT_SUCCESS.value, items=TRANSACTIONS)
 
