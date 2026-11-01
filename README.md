@@ -18,6 +18,7 @@ A personal budgeting app designed to track monthly transactions and provide a fi
 
 ## Todo
 - **Update Category Groups & Categories:** to contain totals and for categories to be unique per period (YYYY-MM)
+- **Account Alias:** Account numbers are a bit hard to track, so I'll add an alt name
 - **Transaction Import Rules:** Restrict what data is imported and assign categories and category groups based on the description
 - **Authentication:** Since this is a small project, I'll just manage one database with one username and password
 - **UI:** Will likely just be a console program, but I use react eventually
