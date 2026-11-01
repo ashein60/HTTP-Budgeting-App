@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from datetime import date as datetime
+from decimal import Decimal
 
 from backend.metadata.enums import (
     CapOneCheckingAndSavingsFields,
@@ -15,8 +16,8 @@ class Transaction:
     account: str
     description: str
     category: str
-    debit: str
-    credit: str
+    debit: Decimal
+    credit: Decimal
 
     @classmethod
     def from_sql_row(cls, row):
@@ -26,8 +27,8 @@ class Transaction:
             account=row[TransactionFields.ACCOUNT.value],
             description=row[TransactionFields.DESCRIPTION.value],
             category=row[TransactionFields.CATEGORY.value],
-            debit=row[TransactionFields.DEBIT.value],
-            credit=row[TransactionFields.CREDIT.value],
+            debit=Decimal(row[TransactionFields.DEBIT.value]),
+            credit=Decimal(row[TransactionFields.CREDIT.value]),
         )
 
     @classmethod
@@ -40,6 +41,17 @@ class Transaction:
             "%Y-%m-%d"
         )
 
+        if transaction_type == CapOneCreditCardFields.DEBIT.value:
+            debit = Decimal(
+                row[CapOneCheckingAndSavingsFields.TRANSACTION_AMOUNT.value]
+            )
+            credit = Decimal(0)
+        else:
+            debit = Decimal(0)
+            credit = Decimal(
+                row[CapOneCheckingAndSavingsFields.TRANSACTION_AMOUNT.value]
+            )
+
         return cls(
             id=None,
             date=date_formated,
@@ -50,12 +62,8 @@ class Transaction:
             category=str(
                 row[CapOneCheckingAndSavingsFields.TRANSACTION_DESCRIPTION.value]
             ).split()[0],
-            debit=row[CapOneCheckingAndSavingsFields.TRANSACTION_AMOUNT.value]
-            if transaction_type == CapOneCreditCardFields.DEBIT.value
-            else "",
-            credit=row[CapOneCheckingAndSavingsFields.TRANSACTION_AMOUNT.value]
-            if transaction_type == CapOneCreditCardFields.CREDIT.value
-            else "",
+            debit=debit,
+            credit=credit,
         )
 
     @classmethod
@@ -66,8 +74,8 @@ class Transaction:
             account=row[CapOneCreditCardFields.CARD_NUMBER.value],
             description=row[CapOneCreditCardFields.DESCRIPTION.value],
             category=row[CapOneCreditCardFields.CATEGORY.value],
-            debit=row[CapOneCreditCardFields.DEBIT.value],
-            credit=row[CapOneCreditCardFields.CREDIT.value],
+            debit=Decimal(row[CapOneCreditCardFields.DEBIT.value] or 0),
+            credit=Decimal(row[CapOneCreditCardFields.CREDIT.value] or 0),
         )
 
     @property
@@ -78,8 +86,8 @@ class Transaction:
             self.account,
             self.description,
             self.category,
-            self.debit,
-            self.credit,
+            str(self.debit),
+            str(self.credit),
         )
 
     def __eq__(self, other):
